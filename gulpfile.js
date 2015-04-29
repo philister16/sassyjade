@@ -4,8 +4,6 @@
 ###
 */
 
-// TODO: use gulp-notify at the end of each task to output a custom message
-
 /**
  * SASSY JADE
  *
@@ -238,7 +236,7 @@ gulp.task("script", function() {
           beautify: myOptions.pretty
         }
       }))
-      .pipe(concat(jsName))
+      .pipe(concat(myOptions.jsName))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
     .pipe(gulp.dest(myScripts.dest))
 });
