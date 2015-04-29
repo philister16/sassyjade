@@ -144,7 +144,8 @@ var gulp = require("gulp"),
     sourcemaps = require("gulp-sourcemaps"),
     concat = require("gulp-concat"),
     jshint = require("gulp-jshint"),
-    uglify = require("gulp-uglify");
+    uglify = require("gulp-uglify"),
+    imagemin = require("gulp-imagemin");
 
 var onError = function(err) {
   console.log(err);
@@ -267,7 +268,11 @@ gulp.task("font", function() {
 // the following img types are included: png, jpg, gif
 gulp.task("img", function() {
   gulp.src(myAssets.img.src)
-  // TODO compress images
+  // compressing images
+  .pipe(imagemin({
+    progressive: true,
+    svgoPlugins: [{removeViewBox: false}]
+  }))
   .pipe(gulp.dest(myAssets.img.dest))
 });
 
