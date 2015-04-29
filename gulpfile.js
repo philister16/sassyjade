@@ -143,6 +143,7 @@ var gulp = require("gulp"),
     minify = require("gulp-minify-css"),
     sourcemaps = require("gulp-sourcemaps"),
     concat = require("gulp-concat"),
+    jshint = require("gulp-jshint"),
     uglify = require("gulp-uglify");
 
 var onError = function(err) {
@@ -225,11 +226,9 @@ gulp.task("minify", function() {
 // concatenate and uglify JS
 // create sourcemaps if myOptions.maps is true
 // output pretty script if myOtpions.pretty is true
-gulp.task("script", function() {
+gulp.task("script", ["jshint"], function() {
   gulp.src(myScripts.src)
-    .pipe(plumber({
-      errorHandler: onError
-    }))
+    .pipe(plumber())
     .pipe(gulpif(myOptions.maps, sourcemaps.init()))
       .pipe(uglify({
         output: {
@@ -241,8 +240,12 @@ gulp.task("script", function() {
     .pipe(gulp.dest(myScripts.dest))
 });
 
-// TODO: introduce a JS hinter task
-
+// Util task to hint through JS and check for any errors
+gulp.task("jshint", function() {
+  return gulp.src(myScripts.src)
+    .pipe(jshint())
+    .pipe(jshint.reporter("default"));
+});
 
 /*==============================================================
   Copy Static Assets
