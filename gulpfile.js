@@ -5,7 +5,7 @@
  *
  * @author phil@rhinerock.com
  * @url http://rhinerock.com
- * @version 0.0.2
+ * @version 0.0.3
  * @license MIT
  */
 
@@ -397,19 +397,3 @@ gulp.task("watch", function() {
   }
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

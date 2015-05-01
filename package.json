@@ -1,6 +1,6 @@
 {
   "name": "sassyjade",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Opinionated gulp and frontend dev",
   "main": "index.html",
   "repository": {
