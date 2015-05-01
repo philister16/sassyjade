@@ -146,8 +146,7 @@ var myOptions = {
   maps: true,              // generate source maps
   jsName: "main.js",       // name of combined js
   cssName: "main.css",     // name of combined css (only relevant for minify method, names from sass are kept)
-  livereloadOn: true,      // switch on and off livereload mode for auto refresh of browser
-  autocompressImg: false   // switch on/off automatic compression of every image added. Alternatively use "gulp compress-img" manually
+  livereloadOn: true       // switch on and off livereload mode for auto refresh of browser
 }
 
 //==================END OF CONFIG============================
@@ -158,6 +157,7 @@ var gulp = require("gulp"),
     plumber = require("gulp-plumber"),
     jade = require("gulp-jade"),
     sass = require("gulp-sass"),
+    prefix = require("gulp-autoprefixer"),
     minify = require("gulp-minify-css"),
     sourcemaps = require("gulp-sourcemaps"),
     concat = require("gulp-concat"),
@@ -220,6 +220,7 @@ gulp.task("sass", function() {
     }))
     .pipe(gulpif(myOptions.maps, sourcemaps.init()))
       .pipe(sass())
+      .pipe(prefix('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
       .pipe(gulpif(!myOptions.pretty, minify()))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
     .pipe(gulp.dest(myAssets.styles.dest));
