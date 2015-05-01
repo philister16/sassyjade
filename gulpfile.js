@@ -126,10 +126,11 @@ var myAssets = {
 //============================================================
 
 var myOptions = {
-  pretty: true,       // human readable html, css and js
-  maps: true,         // generate source maps
-  jsName: "main.js",  // name of combined js
-  cssName: "main.css" // name of combined css (only relevant for minify method, names from sass are kept)
+  pretty: true,            // human readable html, css and js
+  maps: true,              // generate source maps
+  jsName: "main.js",       // name of combined js
+  cssName: "main.css",     // name of combined css (only relevant for minify method, names from sass are kept)
+  livereloadOn: true       // switch on and off livereload mode for auto refresh of browser
 }
 
 //==================END OF CONFIG============================
@@ -145,8 +146,10 @@ var gulp = require("gulp"),
     concat = require("gulp-concat"),
     jshint = require("gulp-jshint"),
     uglify = require("gulp-uglify"),
-    imagemin = require("gulp-imagemin");
+    imagemin = require("gulp-imagemin"),
+    livereload = require("gulp-livereload");
 
+// Plumber error stack
 var onError = function(err) {
   console.log(err);
 }
@@ -166,6 +169,7 @@ gulp.task("index", function() {
       pretty: myOptions.pretty
     }))
     .pipe(gulp.dest("dist/"))
+    .pipe(livereload());
 });
 
 // grabs all templates in all folders after running the index task
@@ -186,6 +190,7 @@ gulp.task("jade", ["index"],function() {
       pretty: myOptions.pretty
     }))
     .pipe(gulp.dest("dist/views"))
+    .pipe(livereload());
 });
 
 
@@ -207,6 +212,7 @@ gulp.task("sass", function() {
       .pipe(gulpif(!myOptions.pretty, minify()))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
     .pipe(gulp.dest("dist/css/"))
+    .pipe(livereload());
 });
 
 // concat and minify the existing css
@@ -217,6 +223,7 @@ gulp.task("minify", function() {
     .pipe(minify())
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
     .pipe(gulp.dest("dist/css/"))
+    .pipe(livereload());
 });
 
 
@@ -226,7 +233,7 @@ gulp.task("minify", function() {
 
 // concatenate and uglify JS
 // create sourcemaps if myOptions.maps is true
-// output pretty script if myOtpions.pretty is true
+// output pretty script if myOptions.pretty is true
 gulp.task("script", ["jshint"], function() {
   gulp.src(myScripts.src)
     .pipe(plumber())
@@ -239,6 +246,7 @@ gulp.task("script", ["jshint"], function() {
       .pipe(concat(myOptions.jsName))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
     .pipe(gulp.dest(myScripts.dest))
+    .pipe(livereload());
 });
 
 // Util task to hint through JS and check for any errors
@@ -262,6 +270,7 @@ gulp.task("asset", ["font", "img", "files"]); // can be called as "assets" or "a
 gulp.task("font", function() {
   gulp.src(myAssets.font.src)
   .pipe(gulp.dest(myAssets.font.dest))
+  .pipe(livereload());
 });
 
 // collects images {png,jpg,gif} from different sources and copies them to dist/images
@@ -274,6 +283,7 @@ gulp.task("img", function() {
     svgoPlugins: [{removeViewBox: false}]
   }))
   .pipe(gulp.dest(myAssets.img.dest))
+  .pipe(livereload());
 });
 
 // collects files from different sources and copies them to dist/files
@@ -281,6 +291,7 @@ gulp.task("img", function() {
 gulp.task("files", function() {
   gulp.src(myAssets.files.src)
   .pipe(gulp.dest(myAssets.files.dest))
+  .pipe(livereload());
 });
 
 
@@ -288,30 +299,48 @@ gulp.task("files", function() {
   Watchers
   ============================================================*/
 
-// TODO: integrate livereload
-
 // watching sass
 gulp.task("watch-sass", function() {
+  // if livereload is enabled create a server instance
+  if(myOptions.livereloadOn) {
+    livereload.listen();
+  }
   gulp.watch("src/styles/**/*.scss", ["sass"]);
 });
 
 // watching jade
 gulp.task("watch-jade", function() {
+  // if livereload is enabled create a server instance
+  if(myOptions.livereloadOn) {
+    livereload.listen();
+  }
   gulp.watch(["src/templ/**/*.jade", "src/index.jade"], ["jade"]);
 });
 
 // watching scripts
 gulp.task("watch-script", function() {
+  // if livereload is enabled create a server instance
+  if(myOptions.livereloadOn) {
+    livereload.listen();
+  }
   gulp.watch(myScripts.src, ["script"]);
 });
 
 // watching static assets
 gulp.task("watch-assets", function() {
+  // if livereload is enabled create a server instance
+  if(myOptions.livereloadOn) {
+    livereload.listen();
+  }
   gulp.watch("src/assets/**/*", ["assets"]);
 });
 
 // global watcher
 gulp.task("watch", function() {
+  // if livereload is enabled create a server instance
+  if(myOptions.livereloadOn) {
+    livereload.listen();
+  }
   // TODO: create separate watchers for each directory with the respective task, so that not all tasks are executed all the time
   gulp.watch([
       "src/styles/**/*.scss",
