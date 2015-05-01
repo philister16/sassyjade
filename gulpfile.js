@@ -27,7 +27,7 @@
 // gulp script        concatenates and uglifies all javascripts
 //                    looks for javascript in the src/scripts/ folder and writes to the dist/js folder
 // gulp asset         copies all assets to the dist version
-//                    it looks for assets based on the sources defined in the config object myAssets
+//                    it looks for assets based on the sources defined in the config object config
 //                    this command can also be called as gulp assets
 // gulp font          same functionality as gulp asset but targets only fonts
 // gulp img           same functionality as gulp asset but targets only images
@@ -70,84 +70,10 @@ app-root
   |-dist/             --> don't touch! is created and managed automatically through Gulp
 */
 
-// 2. Define assets
-//============================================================
-// Collection of sources and destinations of static assets
-// For each category multiple sources can be specified
-// but each category has 1 destination to keep the dist lean
-
-var myAssets = {
-
-  // Templates
-  templ: {
-      src: [
-        "src/templ/**/*.jade",
-        "!src/templ/index.jade", // excl index.jade
-        "!src/templ/incl/*.jade", // excl folder incl/
-        "!src/templ/mixin/*.jade" // excl folder mixin/
-      ],
-      dest: "dist/views/"
-  },
-
-  // Scripts
-  scripts: {
-      src: [
-        "src/scripts/**/*.js",
-        "node_modules/materialize-css/bin/materialize.js"
-      ],
-      dest: "dist/js/"
-  },
-
-  // SASS Stylesheets
-  styles: {
-      src: [
-        "src/styles/**/*.scss"
-      ],
-      dest: "dist/css/"
-  },
-  
-  // Fonts
-  font: {
-    src: [
-      "src/assets/font/**/*.{eot,svg,ttf,woff,woff2}",
-      "node_modules/materialize-css/font/**/*.{eot,svg,ttf,woff,woff2}"
-    ],
-    dest: "dist/font/"
-  },
-  
-  // Images
-  img: {
-    src: [
-      "src/assets/img/**/*.{png,jpg,gif}"
-    ],
-    dest: "dist/img/"
-  },
-  
-  // Files
-  files: {
-    src: [
-      "src/assets/files/**/*"
-    ],
-    dest: "dist/files/"
-  }
-}
-
-// 3. Options
-//============================================================
-
-var myOptions = {
-  messages: true,          // enable system messages
-  pretty: true,            // human readable html
-  maps: true,              // generate source maps
-  jsName: "main.js",       // name of combined js
-  cssName: "main.css",     // name of combined css (only relevant for minify method, names from sass are kept)
-  livereloadOn: true       // switch on and off livereload mode for auto refresh of browser
-}
-
-//==================END OF CONFIG============================
 
 // Require in the plugins
 var gulp = require("gulp"),
+    config = require("./sassyjade.config.json"),
     gulpif = require("gulp-if"),
     rename = require("gulp-rename"),
     plumber = require("gulp-plumber"),
@@ -181,10 +107,10 @@ gulp.task("index", function() {
       errorHandler: onError
     }))
     .pipe(jade({
-      pretty: myOptions.pretty
+      pretty: config.option.pretty
     }))
     .pipe(gulp.dest("dist/"))
-    .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished updating your index file."})));
+    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished updating your index file."})));
 });
 
 // grabs all templates in all folders after running the index task
@@ -192,15 +118,15 @@ gulp.task("index", function() {
 // also omits the index.jade which will be placed in the root
 // plumber applied to keep jade running in case of typos
 gulp.task("jade", ["index"],function() {
-  return gulp.src(myAssets.templ.src)
+  return gulp.src(config.templ.src)
     .pipe(plumber({
       errorHandler: onError
     }))
     .pipe(jade({
-      pretty: myOptions.pretty
+      pretty: config.option.pretty
     }))
-    .pipe(gulp.dest(myAssets.templ.dest))
-    .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compiling Jade."})));
+    .pipe(gulp.dest(config.templ.dest))
+    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compiling Jade."})));
 });
 
 
@@ -211,22 +137,22 @@ gulp.task("jade", ["index"],function() {
 // convert sass to css
 // create sourcemaps
 // plumber applied to keep sass running in case of typos
-// create sourcemaps if myOptions.maps is true
+// create sourcemaps if config.option.maps is true
 gulp.task("sass", function() {
-  return gulp.src(myAssets.styles.src)
+  return gulp.src(config.styles.src)
     .pipe(plumber({
       errorHandler: onError
     }))
-    .pipe(gulpif(myOptions.maps, sourcemaps.init()))
+    .pipe(gulpif(config.option.maps, sourcemaps.init()))
       .pipe(sass())
       .pipe(prefix('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
-      .pipe(concat(myOptions.cssName))
-      .pipe(gulp.dest(myAssets.styles.dest))
+      .pipe(concat(config.option.cssName))
+      .pipe(gulp.dest(config.styles.dest))
       .pipe(rename({suffix: ".min"}))
       .pipe(minify())
-    .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest(myAssets.styles.dest))
-    .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compiling Sass."})));
+    .pipe(gulpif(config.option.maps, sourcemaps.write()))
+    .pipe(gulp.dest(config.styles.dest))
+    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compiling Sass."})));
 });
 
 
@@ -235,24 +161,24 @@ gulp.task("sass", function() {
   ============================================================*/
 
 // concatenate and uglify JS
-// create sourcemaps if myOptions.maps is true
-// output pretty script if myOptions.pretty is true
+// create sourcemaps if config.option.maps is true
+// output pretty script if config.option.pretty is true
 gulp.task("script", ["jshint"], function() {
-  return gulp.src(myAssets.scripts.src)
+  return gulp.src(config.scripts.src)
     .pipe(plumber())
-    .pipe(gulpif(myOptions.maps, sourcemaps.init()))
-      .pipe(concat(myOptions.jsName))
-      .pipe(gulp.dest(myAssets.scripts.dest))
+    .pipe(gulpif(config.option.maps, sourcemaps.init()))
+      .pipe(concat(config.option.jsName))
+      .pipe(gulp.dest(config.scripts.dest))
       .pipe(rename({suffix: ".min"}))
       .pipe(uglify())
-    .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest(myAssets.scripts.dest))
-    .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compiling JS."})));
+    .pipe(gulpif(config.option.maps, sourcemaps.write()))
+    .pipe(gulp.dest(config.scripts.dest))
+    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compiling JS."})));
 });
 
 // Util task to hint through JS and check for any errors
 gulp.task("jshint", function() {
-  return gulp.src(myAssets.scripts.src)
+  return gulp.src(config.scripts.src)
     .pipe(jshint())
     .pipe(jshint.reporter("default"));
 });
@@ -269,29 +195,29 @@ gulp.task("asset", ["font", "img", "files"]); // can be called as "assets" or "a
 // collects fonts from different sources and copies them to dist/fonts
 // the following extensions will be included: eot, svg, ttf, woff, woff2
 gulp.task("font", function() {
-  return gulp.src(myAssets.font.src)
-  .pipe(gulp.dest(myAssets.font.dest))
-  .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished copying fonts."})));
+  return gulp.src(config.font.src)
+  .pipe(gulp.dest(config.font.dest))
+  .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished copying fonts."})));
 });
 
 // collects images {png,jpg,gif} from different sources and copies them to dist/images
 // the following img types are included: png, jpg, gif
 gulp.task("img", function() {
-  return gulp.src(myAssets.img.src)
+  return gulp.src(config.img.src)
   // compressing images if config.autocmpressImg is true
   .pipe(cache(imagemin({
     optimizationLevel: 3, progressive: true, interlaced: true, svgoPlugins: [{removeViewBox: false}]
   })))
-  .pipe(gulp.dest(myAssets.img.dest))
-  .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compressing and copying images."})));
+  .pipe(gulp.dest(config.img.dest))
+  .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compressing and copying images."})));
 });
 
 // collects files from different sources and copies them to dist/files
 // Attention! All extensions are collected
 gulp.task("files", function() {
-  return gulp.src(myAssets.files.src)
-  .pipe(gulp.dest(myAssets.files.dest))
-  .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished copying files."})));
+  return gulp.src(config.files.src)
+  .pipe(gulp.dest(config.files.dest))
+  .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished copying files."})));
 });
 
 
@@ -301,10 +227,10 @@ gulp.task("files", function() {
 
 // watching sass
 gulp.task("watch-sass", function() {
-  gulp.watch(myAssets.styles.src, ["sass"]);
+  gulp.watch(config.styles.src, ["sass"]);
 
   // if livereload is enabled create a server and watch the files in the dist/
-  if(myOptions.livereloadOn) {
+  if(config.option.livereloadOn) {
 
     // Create LiveReload server
     livereload.listen();
@@ -316,11 +242,11 @@ gulp.task("watch-sass", function() {
 
 // watching jade
 gulp.task("watch-jade", function() {
-  gulp.watch(myAssets.templ.src, ["jade"]);
+  gulp.watch(config.templ.src, ["jade"]);
   gulp.watch("src/index.jade", ["jade"]); // we call jade as this is the task that is run, the jade task executes index before itself
 
   // if livereload is enabled create a server and watch the files in the dist/
-  if(myOptions.livereloadOn) {
+  if(config.option.livereloadOn) {
 
     // Create LiveReload server
     livereload.listen();
@@ -332,10 +258,10 @@ gulp.task("watch-jade", function() {
 
 // watching scripts
 gulp.task("watch-script", function() {
-  gulp.watch(myAssets.scripts.src, ["script"]);
+  gulp.watch(config.scripts.src, ["script"]);
 
   // if livereload is enabled create a server and watch the files in the dist/
-  if(myOptions.livereloadOn) {
+  if(config.option.livereloadOn) {
 
     // Create LiveReload server
     livereload.listen();
@@ -347,12 +273,12 @@ gulp.task("watch-script", function() {
 
 // watching static assets
 gulp.task("watch-static-assets", function() {
-  gulp.watch(myAssets.font.src, ["font"]);
-  gulp.watch(myAssets.img.src, ["img"]);
-  gulp.watch(myAssets.files.src, ["files"]);
+  gulp.watch(config.font.src, ["font"]);
+  gulp.watch(config.img.src, ["img"]);
+  gulp.watch(config.files.src, ["files"]);
 
   // if livereload is enabled create a server and watch the files in the dist/
-  if(myOptions.livereloadOn) {
+  if(config.option.livereloadOn) {
 
     // Create LiveReload server
     livereload.listen();
@@ -369,25 +295,25 @@ gulp.task("watch", function() {
   gulp.watch("src/index.jade", ["index"]);
 
   // Watch Jade
-  gulp.watch(myAssets.templ.src, ["jade"]);
+  gulp.watch(config.templ.src, ["jade"]);
 
   // Watch Sass
-  gulp.watch(myAssets.styles.src, ["sass"]);
+  gulp.watch(config.styles.src, ["sass"]);
 
   // Watch Scripts
-  gulp.watch(myAssets.scripts.src, ["script"]);
+  gulp.watch(config.scripts.src, ["script"]);
 
   // Watch Images
-  gulp.watch(myAssets.img.src, ["img"]);
+  gulp.watch(config.img.src, ["img"]);
 
   // Watch Fonts
-  gulp.watch(myAssets.font.src, ["font"]);
+  gulp.watch(config.font.src, ["font"]);
 
   // Watch files
-  gulp.watch(myAssets.files.src, ["files"]);
+  gulp.watch(config.files.src, ["files"]);
 
   // if livereload is enabled create a server and watch the files in the dist/
-  if(myOptions.livereloadOn) {
+  if(config.option.livereloadOn) {
 
     // Create LiveReload server
     livereload.listen();

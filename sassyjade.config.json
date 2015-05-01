@@ -1,0 +1,51 @@
+{
+  "templ": {
+      "src": [
+        "src/templ/**/*.jade",
+        "!src/templ/index.jade",
+        "!src/templ/incl/*.jade",
+        "!src/templ/mixin/*.jade"
+      ],
+      "dest": "dist/views/"
+  },
+  "scripts": {
+      "src": [
+        "src/scripts/**/*.js",
+        "node_modules/materialize-css/bin/materialize.js"
+      ],
+      "dest": "dist/js/"
+  },
+  "styles": {
+      "src": [
+        "src/styles/**/*.scss"
+      ],
+      "dest": "dist/css/"
+  },
+  "font": {
+    "src": [
+      "src/assets/font/**/*.{eot,svg,ttf,woff,woff2}",
+      "node_modules/materialize-css/font/**/*.{eot,svg,ttf,woff,woff2}"
+    ],
+    "dest": "dist/font/"
+  },
+  "img": {
+    "src": [
+      "src/assets/img/**/*.{png,jpg,gif}"
+    ],
+    "dest": "dist/img/"
+  },
+  "files": {
+    "src": [
+      "src/assets/files/**/*"
+    ],
+    "dest": "dist/files/"
+  },
+  "option": {
+  "messages": true,
+  "pretty": true,
+  "maps": true,
+  "jsName": "main.js",
+  "cssName": "main.css",
+  "livereloadOn": true
+  }
+}
