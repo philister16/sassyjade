@@ -76,18 +76,6 @@ app-root
   |-dist/             --> don't touch! is created and managed automatically through Gulp
 */
 
-// 1. Define the JS of the project
-//============================================================
-// Collection of sources and destination of scripts
-
-var myScripts = {
-  src: [
-    "src/scripts/**/*.js",
-    "node_modules/materialize-css/bin/materialize.js"
-  ],
-  dest: "dist/js/"
-}
-
 // 2. Define the static assets
 //============================================================
 // Collection of sources and destinations of static assets
@@ -95,6 +83,34 @@ var myScripts = {
 // but each category has 1 destination to keep the dist lean
 
 var myAssets = {
+
+  // Templates
+  templ: {
+      src: [
+        "src/templ/**/*.jade",
+        "!src/templ/index.jade", // excl index.jade
+        "!src/templ/incl/*.jade", // excl folder incl/
+        "!src/templ/mixin/*.jade" // excl folder mixin/
+      ],
+      dest: "dist/views/"
+  },
+
+  // Scripts
+  scripts: {
+      src: [
+        "src/scripts/**/*.js",
+        "node_modules/materialize-css/bin/materialize.js"
+      ],
+      dest: "dist/js/"
+  },
+
+  // Styles / Stylesheets
+  styles: {
+      src: [
+        "src/styles/**/*.scss"
+      ],
+      dest: "dist/css/"
+  },
   
   // Fonts
   font: {
@@ -130,7 +146,8 @@ var myOptions = {
   maps: true,              // generate source maps
   jsName: "main.js",       // name of combined js
   cssName: "main.css",     // name of combined css (only relevant for minify method, names from sass are kept)
-  livereloadOn: true       // switch on and off livereload mode for auto refresh of browser
+  livereloadOn: true,      // switch on and off livereload mode for auto refresh of browser
+  autocompressImg: false   // switch on/off automatic compression of every image added. Alternatively use "gulp compress-img" manually
 }
 
 //==================END OF CONFIG============================
@@ -161,7 +178,7 @@ var onError = function(err) {
 // grabs the index file from the src and compiles it to the dist
 // using jade
 gulp.task("index", function() {
-  gulp.src("src/index.jade")
+  return gulp.src("src/index.jade")
     .pipe(plumber({
       errorHandler: onError
     }))
@@ -177,19 +194,14 @@ gulp.task("index", function() {
 // also omits the index.jade which will be placed in the root
 // plumber applied to keep jade running in case of typos
 gulp.task("jade", ["index"],function() {
-  gulp.src([
-      "src/templ/**/*.jade",
-      "!src/templ/index.jade", // excl index.jade
-      "!src/templ/incl/*.jade", // excl folder incl/
-      "!src/templ/mixin/*.jade" // excl folder mixin/
-    ])
+  return gulp.src(myAssets.templ.src)
     .pipe(plumber({
       errorHandler: onError
     }))
     .pipe(jade({
       pretty: myOptions.pretty
     }))
-    .pipe(gulp.dest("dist/views"))
+    .pipe(gulp.dest(myAssets.templ.dest))
     .pipe(livereload());
 });
 
@@ -203,7 +215,7 @@ gulp.task("jade", ["index"],function() {
 // plumber applied to keep sass running in case of typos
 // create sourcemaps if myOptions.maps is true
 gulp.task("sass", function() {
-  gulp.src("src/styles/**/*.scss")
+  return gulp.src(myAssets.styles.src)
     .pipe(plumber({
       errorHandler: onError
     }))
@@ -211,13 +223,13 @@ gulp.task("sass", function() {
       .pipe(sass())
       .pipe(gulpif(!myOptions.pretty, minify()))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest("dist/css/"))
+    .pipe(gulp.dest(myAssets.styles.dest))
     .pipe(livereload());
 });
 
 // concat and minify the existing css
 gulp.task("minify", function() {
-  gulp.src("dist/css/**/*.css")
+  return gulp.src("dist/css/**/*.css")
     .pipe(gulpif(myOptions.maps, sourcemaps.init()))
     .pipe(concat(cssName))
     .pipe(minify())
@@ -235,7 +247,7 @@ gulp.task("minify", function() {
 // create sourcemaps if myOptions.maps is true
 // output pretty script if myOptions.pretty is true
 gulp.task("script", ["jshint"], function() {
-  gulp.src(myScripts.src)
+  return gulp.src(myAssets.scripts.src)
     .pipe(plumber())
     .pipe(gulpif(myOptions.maps, sourcemaps.init()))
       .pipe(uglify({
@@ -245,13 +257,13 @@ gulp.task("script", ["jshint"], function() {
       }))
       .pipe(concat(myOptions.jsName))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest(myScripts.dest))
+    .pipe(gulp.dest(myAssets.scripts.dest))
     .pipe(livereload());
 });
 
 // Util task to hint through JS and check for any errors
 gulp.task("jshint", function() {
-  return gulp.src(myScripts.src)
+  return gulp.src(myAssets.scripts.src)
     .pipe(jshint())
     .pipe(jshint.reporter("default"));
 });
@@ -268,7 +280,7 @@ gulp.task("asset", ["font", "img", "files"]); // can be called as "assets" or "a
 // collects fonts from different sources and copies them to dist/fonts
 // the following extensions will be included: eot, svg, ttf, woff, woff2
 gulp.task("font", function() {
-  gulp.src(myAssets.font.src)
+  return gulp.src(myAssets.font.src)
   .pipe(gulp.dest(myAssets.font.dest))
   .pipe(livereload());
 });
@@ -276,12 +288,12 @@ gulp.task("font", function() {
 // collects images {png,jpg,gif} from different sources and copies them to dist/images
 // the following img types are included: png, jpg, gif
 gulp.task("img", function() {
-  gulp.src(myAssets.img.src)
-  // compressing images
-  .pipe(imagemin({
+  return gulp.src(myAssets.img.src)
+  // compressing images if config.autocmpressImg is true
+  .pipe(gulpif(myOptions.autocompressImg, imagemin({
     progressive: true,
     svgoPlugins: [{removeViewBox: false}]
-  }))
+  })))
   .pipe(gulp.dest(myAssets.img.dest))
   .pipe(livereload());
 });
@@ -289,9 +301,21 @@ gulp.task("img", function() {
 // collects files from different sources and copies them to dist/files
 // Attention! All extensions are collected
 gulp.task("files", function() {
-  gulp.src(myAssets.files.src)
+  return gulp.src(myAssets.files.src)
   .pipe(gulp.dest(myAssets.files.dest))
   .pipe(livereload());
+});
+
+// Separate task for compressing images to not compress all images all the time
+// Looks in the dist/img folder, compresss the images and rewrites them to the same location
+gulp.task("compress-img", function() {
+  return gulp.src("dist/img/**/*.{png,jpg,gif}")
+    .pipe(imagemin({
+      progressive: true,
+      svgoPlugins: [{removeViewBox: false}]
+    }))
+    .pipe(gulp.dest("dist/img/"))
+    .pipe(livereload());
 });
 
 
@@ -305,7 +329,7 @@ gulp.task("watch-sass", function() {
   if(myOptions.livereloadOn) {
     livereload.listen();
   }
-  gulp.watch("src/styles/**/*.scss", ["sass"]);
+  gulp.watch(myAssets.styles.src, ["sass"]);
 });
 
 // watching jade
@@ -314,7 +338,8 @@ gulp.task("watch-jade", function() {
   if(myOptions.livereloadOn) {
     livereload.listen();
   }
-  gulp.watch(["src/templ/**/*.jade", "src/index.jade"], ["jade"]);
+  gulp.watch(myAssets.templ.src, ["jade"]);
+  gulp.watch("src/index.jade", ["jade"]); // we call jade as this is the task that is run, the jade task executes index before itself
 });
 
 // watching scripts
@@ -323,16 +348,18 @@ gulp.task("watch-script", function() {
   if(myOptions.livereloadOn) {
     livereload.listen();
   }
-  gulp.watch(myScripts.src, ["script"]);
+  gulp.watch(myAssets.scripts.src, ["script"]);
 });
 
 // watching static assets
-gulp.task("watch-assets", function() {
+gulp.task("watch-static-assets", function() {
   // if livereload is enabled create a server instance
   if(myOptions.livereloadOn) {
     livereload.listen();
   }
-  gulp.watch("src/assets/**/*", ["assets"]);
+  gulp.watch(myAssets.font.src, ["font"]);
+  gulp.watch(myAssets.img.src, ["img"]);
+  gulp.watch(myAssets.files.src, ["files"]);
 });
 
 // global watcher
@@ -346,7 +373,7 @@ gulp.task("watch", function() {
       "src/styles/**/*.scss",
       "src/templ/**/*.jade",
       "src/index.jade",
-      myScripts.src,
+      myAssets.scripts.src,
       "src/assets/**/*"
     ],
     [
