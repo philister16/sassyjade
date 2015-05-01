@@ -52,7 +52,7 @@
   Config
   ============================================================*/
 
-// 0. Folder structure
+// 1. Folder structure
 //============================================================
 // Your app should have the following (opinionated) structure:
 
@@ -76,7 +76,7 @@ app-root
   |-dist/             --> don't touch! is created and managed automatically through Gulp
 */
 
-// 2. Define the static assets
+// 2. Define assets
 //============================================================
 // Collection of sources and destinations of static assets
 // For each category multiple sources can be specified
@@ -164,6 +164,7 @@ var gulp = require("gulp"),
     jshint = require("gulp-jshint"),
     uglify = require("gulp-uglify"),
     imagemin = require("gulp-imagemin"),
+    cache = require("gulp-cache"),
     livereload = require("gulp-livereload");
 
 // Plumber error stack
@@ -284,9 +285,8 @@ gulp.task("font", function() {
 gulp.task("img", function() {
   return gulp.src(myAssets.img.src)
   // compressing images if config.autocmpressImg is true
-  .pipe(gulpif(myOptions.autocompressImg, imagemin({
-    progressive: true,
-    svgoPlugins: [{removeViewBox: false}]
+  .pipe(cache(imagemin({
+    optimizationLevel: 3, progressive: true, interlaced: true, svgoPlugins: [{removeViewBox: false}]
   })))
   .pipe(gulp.dest(myAssets.img.dest));
 });
@@ -296,17 +296,6 @@ gulp.task("img", function() {
 gulp.task("files", function() {
   return gulp.src(myAssets.files.src)
   .pipe(gulp.dest(myAssets.files.dest));
-});
-
-// Separate task for compressing images to not compress all images all the time
-// Looks in the dist/img folder, compresss the images and rewrites them to the same location
-gulp.task("compress-img", function() {
-  return gulp.src("dist/img/**/*.{png,jpg,gif}")
-    .pipe(imagemin({
-      progressive: true,
-      svgoPlugins: [{removeViewBox: false}]
-    }))
-    .pipe(gulp.dest("dist/img/"));
 });
 
 
