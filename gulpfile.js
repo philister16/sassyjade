@@ -368,18 +368,41 @@ gulp.task("watch", function() {
   if(myOptions.livereloadOn) {
     livereload.listen();
   }
-  // TODO: create separate watchers for each directory with the respective task, so that not all tasks are executed all the time
-  gulp.watch([
-      "src/styles/**/*.scss",
-      "src/templ/**/*.jade",
-      "src/index.jade",
-      myAssets.scripts.src,
-      "src/assets/**/*"
-    ],
-    [
-      "sass",
-      "jade",
-      "script",
-      "assets"
-    ]);
+
+  // Watch Index
+  gulp.watch("src/index.jade", ["index"]);
+
+  // Watch Jade
+  gulp.watch(myAssets.templ.src, ["jade"]);
+
+  // Watch Sass
+  gulp.watch(myAssets.styles.src, ["sass"]);
+
+  // Watch Scripts
+  gulp.watch(myAssets.scripts.src, ["script"]);
+
+  // Watch Images
+  gulp.watch(myAssets.img.src, ["img"]);
+
+  // Watch Fonts
+  gulp.watch(myAssets.font.src, ["font"]);
+
+  // Watch files
+  gulp.watch(myAssets.files.src, ["files"]);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
