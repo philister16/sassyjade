@@ -1,9 +1,3 @@
-/*
-###
-### Has TODO's
-###
-*/
-
 /**
  * SASSY JADE
  *
@@ -143,7 +137,7 @@ var myAssets = {
 
 var myOptions = {
   messages: true,          // enable system messages
-  pretty: true,            // human readable html and js
+  pretty: true,            // human readable html
   maps: true,              // generate source maps
   jsName: "main.js",       // name of combined js
   cssName: "main.css",     // name of combined css (only relevant for minify method, names from sass are kept)
@@ -226,6 +220,7 @@ gulp.task("sass", function() {
     .pipe(gulpif(myOptions.maps, sourcemaps.init()))
       .pipe(sass())
       .pipe(prefix('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+      .pipe(concat(myOptions.cssName))
       .pipe(gulp.dest(myAssets.styles.dest))
       .pipe(rename({suffix: ".min"}))
       .pipe(minify())
@@ -246,12 +241,10 @@ gulp.task("script", ["jshint"], function() {
   return gulp.src(myAssets.scripts.src)
     .pipe(plumber())
     .pipe(gulpif(myOptions.maps, sourcemaps.init()))
-      .pipe(uglify({
-        output: {
-          beautify: myOptions.pretty
-        }
-      }))
       .pipe(concat(myOptions.jsName))
+      .pipe(gulp.dest(myAssets.scripts.dest))
+      .pipe(rename({suffix: ".min"}))
+      .pipe(uglify())
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
     .pipe(gulp.dest(myAssets.scripts.dest))
     .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compiling JS."})));

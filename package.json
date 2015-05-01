@@ -3,6 +3,10 @@
   "version": "0.0.2",
   "description": "Opinionated gulp and frontend dev",
   "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philister16/sassyjade.git"
+  }
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
