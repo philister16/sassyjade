@@ -185,8 +185,7 @@ gulp.task("index", function() {
     .pipe(jade({
       pretty: myOptions.pretty
     }))
-    .pipe(gulp.dest("dist/"))
-    .pipe(livereload());
+    .pipe(gulp.dest("dist/"));
 });
 
 // grabs all templates in all folders after running the index task
@@ -201,8 +200,7 @@ gulp.task("jade", ["index"],function() {
     .pipe(jade({
       pretty: myOptions.pretty
     }))
-    .pipe(gulp.dest(myAssets.templ.dest))
-    .pipe(livereload());
+    .pipe(gulp.dest(myAssets.templ.dest));
 });
 
 
@@ -223,8 +221,7 @@ gulp.task("sass", function() {
       .pipe(sass())
       .pipe(gulpif(!myOptions.pretty, minify()))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest(myAssets.styles.dest))
-    .pipe(livereload());
+    .pipe(gulp.dest(myAssets.styles.dest));
 });
 
 // concat and minify the existing css
@@ -234,8 +231,7 @@ gulp.task("minify", function() {
     .pipe(concat(cssName))
     .pipe(minify())
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest("dist/css/"))
-    .pipe(livereload());
+    .pipe(gulp.dest("dist/css/"));
 });
 
 
@@ -257,8 +253,7 @@ gulp.task("script", ["jshint"], function() {
       }))
       .pipe(concat(myOptions.jsName))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest(myAssets.scripts.dest))
-    .pipe(livereload());
+    .pipe(gulp.dest(myAssets.scripts.dest));
 });
 
 // Util task to hint through JS and check for any errors
@@ -281,8 +276,7 @@ gulp.task("asset", ["font", "img", "files"]); // can be called as "assets" or "a
 // the following extensions will be included: eot, svg, ttf, woff, woff2
 gulp.task("font", function() {
   return gulp.src(myAssets.font.src)
-  .pipe(gulp.dest(myAssets.font.dest))
-  .pipe(livereload());
+  .pipe(gulp.dest(myAssets.font.dest));
 });
 
 // collects images {png,jpg,gif} from different sources and copies them to dist/images
@@ -294,16 +288,14 @@ gulp.task("img", function() {
     progressive: true,
     svgoPlugins: [{removeViewBox: false}]
   })))
-  .pipe(gulp.dest(myAssets.img.dest))
-  .pipe(livereload());
+  .pipe(gulp.dest(myAssets.img.dest));
 });
 
 // collects files from different sources and copies them to dist/files
 // Attention! All extensions are collected
 gulp.task("files", function() {
   return gulp.src(myAssets.files.src)
-  .pipe(gulp.dest(myAssets.files.dest))
-  .pipe(livereload());
+  .pipe(gulp.dest(myAssets.files.dest));
 });
 
 // Separate task for compressing images to not compress all images all the time
@@ -314,8 +306,7 @@ gulp.task("compress-img", function() {
       progressive: true,
       svgoPlugins: [{removeViewBox: false}]
     }))
-    .pipe(gulp.dest("dist/img/"))
-    .pipe(livereload());
+    .pipe(gulp.dest("dist/img/"));
 });
 
 
@@ -325,49 +316,69 @@ gulp.task("compress-img", function() {
 
 // watching sass
 gulp.task("watch-sass", function() {
-  // if livereload is enabled create a server instance
-  if(myOptions.livereloadOn) {
-    livereload.listen();
-  }
   gulp.watch(myAssets.styles.src, ["sass"]);
+
+  // if livereload is enabled create a server and watch the files in the dist/
+  if(myOptions.livereloadOn) {
+
+    // Create LiveReload server
+    livereload.listen();
+
+    // Watch any files in dist/, reload on change
+    gulp.watch(['dist/**']).on('change', livereload.changed);
+  }
 });
 
 // watching jade
 gulp.task("watch-jade", function() {
-  // if livereload is enabled create a server instance
-  if(myOptions.livereloadOn) {
-    livereload.listen();
-  }
   gulp.watch(myAssets.templ.src, ["jade"]);
   gulp.watch("src/index.jade", ["jade"]); // we call jade as this is the task that is run, the jade task executes index before itself
+
+  // if livereload is enabled create a server and watch the files in the dist/
+  if(myOptions.livereloadOn) {
+
+    // Create LiveReload server
+    livereload.listen();
+
+    // Watch any files in dist/, reload on change
+    gulp.watch(['dist/**']).on('change', livereload.changed);
+  }
 });
 
 // watching scripts
 gulp.task("watch-script", function() {
-  // if livereload is enabled create a server instance
-  if(myOptions.livereloadOn) {
-    livereload.listen();
-  }
   gulp.watch(myAssets.scripts.src, ["script"]);
+
+  // if livereload is enabled create a server and watch the files in the dist/
+  if(myOptions.livereloadOn) {
+
+    // Create LiveReload server
+    livereload.listen();
+
+    // Watch any files in dist/, reload on change
+    gulp.watch(['dist/**']).on('change', livereload.changed);
+  }
 });
 
 // watching static assets
 gulp.task("watch-static-assets", function() {
-  // if livereload is enabled create a server instance
-  if(myOptions.livereloadOn) {
-    livereload.listen();
-  }
   gulp.watch(myAssets.font.src, ["font"]);
   gulp.watch(myAssets.img.src, ["img"]);
   gulp.watch(myAssets.files.src, ["files"]);
+
+  // if livereload is enabled create a server and watch the files in the dist/
+  if(myOptions.livereloadOn) {
+
+    // Create LiveReload server
+    livereload.listen();
+
+    // Watch any files in dist/, reload on change
+    gulp.watch(['dist/**']).on('change', livereload.changed);
+  }
 });
 
 // global watcher
 gulp.task("watch", function() {
-  // if livereload is enabled create a server instance
-  if(myOptions.livereloadOn) {
-    livereload.listen();
-  }
 
   // Watch Index
   gulp.watch("src/index.jade", ["index"]);
@@ -389,6 +400,17 @@ gulp.task("watch", function() {
 
   // Watch files
   gulp.watch(myAssets.files.src, ["files"]);
+
+  // if livereload is enabled create a server and watch the files in the dist/
+  if(myOptions.livereloadOn) {
+
+    // Create LiveReload server
+    livereload.listen();
+
+    // Watch any files in dist/, reload on change
+    gulp.watch(['dist/**']).on('change', livereload.changed);
+  }
+
 });
 
 
