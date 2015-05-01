@@ -154,6 +154,7 @@ var myOptions = {
 // Require in the plugins
 var gulp = require("gulp"),
     gulpif = require("gulp-if"),
+    rename = require("gulp-rename"),
     plumber = require("gulp-plumber"),
     jade = require("gulp-jade"),
     sass = require("gulp-sass"),
@@ -221,7 +222,9 @@ gulp.task("sass", function() {
     .pipe(gulpif(myOptions.maps, sourcemaps.init()))
       .pipe(sass())
       .pipe(prefix('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
-      .pipe(gulpif(!myOptions.pretty, minify()))
+      .pipe(gulp.dest(myAssets.styles.dest))
+      .pipe(rename({suffix: ".min"}))
+      .pipe(minify())
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
     .pipe(gulp.dest(myAssets.styles.dest));
 });
