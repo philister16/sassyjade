@@ -104,7 +104,7 @@ var myAssets = {
       dest: "dist/js/"
   },
 
-  // Styles / Stylesheets
+  // SASS Stylesheets
   styles: {
       src: [
         "src/styles/**/*.scss"
@@ -142,7 +142,8 @@ var myAssets = {
 //============================================================
 
 var myOptions = {
-  pretty: true,            // human readable html, css and js
+  messages: true,          // enable system messages
+  pretty: true,            // human readable html and js
   maps: true,              // generate source maps
   jsName: "main.js",       // name of combined js
   cssName: "main.css",     // name of combined css (only relevant for minify method, names from sass are kept)
@@ -156,6 +157,7 @@ var gulp = require("gulp"),
     gulpif = require("gulp-if"),
     rename = require("gulp-rename"),
     plumber = require("gulp-plumber"),
+    notify = require("gulp-notify"),
     jade = require("gulp-jade"),
     sass = require("gulp-sass"),
     prefix = require("gulp-autoprefixer"),
@@ -187,7 +189,8 @@ gulp.task("index", function() {
     .pipe(jade({
       pretty: myOptions.pretty
     }))
-    .pipe(gulp.dest("dist/"));
+    .pipe(gulp.dest("dist/"))
+    .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished updating your index file."})));
 });
 
 // grabs all templates in all folders after running the index task
@@ -202,7 +205,8 @@ gulp.task("jade", ["index"],function() {
     .pipe(jade({
       pretty: myOptions.pretty
     }))
-    .pipe(gulp.dest(myAssets.templ.dest));
+    .pipe(gulp.dest(myAssets.templ.dest))
+    .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compiling Jade."})));
 });
 
 
@@ -226,17 +230,8 @@ gulp.task("sass", function() {
       .pipe(rename({suffix: ".min"}))
       .pipe(minify())
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest(myAssets.styles.dest));
-});
-
-// concat and minify the existing css
-gulp.task("minify", function() {
-  return gulp.src("dist/css/**/*.css")
-    .pipe(gulpif(myOptions.maps, sourcemaps.init()))
-    .pipe(concat(cssName))
-    .pipe(minify())
-    .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest("dist/css/"));
+    .pipe(gulp.dest(myAssets.styles.dest))
+    .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compiling Sass."})));
 });
 
 
@@ -258,7 +253,8 @@ gulp.task("script", ["jshint"], function() {
       }))
       .pipe(concat(myOptions.jsName))
     .pipe(gulpif(myOptions.maps, sourcemaps.write()))
-    .pipe(gulp.dest(myAssets.scripts.dest));
+    .pipe(gulp.dest(myAssets.scripts.dest))
+    .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compiling JS."})));
 });
 
 // Util task to hint through JS and check for any errors
@@ -281,7 +277,8 @@ gulp.task("asset", ["font", "img", "files"]); // can be called as "assets" or "a
 // the following extensions will be included: eot, svg, ttf, woff, woff2
 gulp.task("font", function() {
   return gulp.src(myAssets.font.src)
-  .pipe(gulp.dest(myAssets.font.dest));
+  .pipe(gulp.dest(myAssets.font.dest))
+  .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished copying fonts."})));
 });
 
 // collects images {png,jpg,gif} from different sources and copies them to dist/images
@@ -292,14 +289,16 @@ gulp.task("img", function() {
   .pipe(cache(imagemin({
     optimizationLevel: 3, progressive: true, interlaced: true, svgoPlugins: [{removeViewBox: false}]
   })))
-  .pipe(gulp.dest(myAssets.img.dest));
+  .pipe(gulp.dest(myAssets.img.dest))
+  .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished compressing and copying images."})));
 });
 
 // collects files from different sources and copies them to dist/files
 // Attention! All extensions are collected
 gulp.task("files", function() {
   return gulp.src(myAssets.files.src)
-  .pipe(gulp.dest(myAssets.files.dest));
+  .pipe(gulp.dest(myAssets.files.dest))
+  .pipe(gulpif(myOptions.messages, notify({message: "Sassyjade finished copying files."})));
 });
 
 
