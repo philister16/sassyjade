@@ -1,0 +1,15 @@
+doctype html
+html
+  block base
+    include ../incl/config.jade
+    include ../mixin/jadestones.jade
+  block vars
+  head
+    block title
+      title= site + " | " + page
+    block stylesheet
+      link(rel="stylesheet" type="text/css" href= root + "css/main.css")
+  body
+    block layout
+    block scripts
+      script(type="text/javascript", src="js/main.js")
