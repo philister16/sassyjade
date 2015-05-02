@@ -1,0 +1,34 @@
+doctype html
+html(lang="en")
+  head
+    link(rel="stylesheet" type="text/css" href="css/main.css")
+    title Sassyjade | Intro
+  body
+    header
+      h1 Hi, I am Sassy Jade on Gulp
+    nav
+      ul
+        li
+          a(href="index.html") Home
+        li
+          a(href="more.html") Learn More
+        li
+          a(href="cool.html") Cool Stuff
+    .main
+      h2 Nice to meet you ;-)
+      p I am here to give you a headstart developing front-ends with Sass, Jade and Gulp.
+      h3 Where to start?
+      p Switch to your terminal and kick-off all the pre-defined Gulp tasks, including compiling your Sass and Jade.
+      pre
+        code ~$ gulp watch
+      p If you prefer to work on your Jade only and don't bother about the styling just yet you can also just watch for changes in your templates.
+      pre
+        code ~$ gulp watch-jade
+      p And the other way: just care about style (who does't...?) then we have you covered.
+      pre
+        code ~$ gulp watch-sass
+      h3 What's next?
+      p #[a(href="#") Learn more] about all the pre-built Gulp tasks, my opinionated workflow and read the #[a(href="#") docs]. See ya!
+    footer
+      p Built in Basel
+    script(type="text/javascript", src="js/main.js")
