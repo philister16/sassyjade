@@ -11,7 +11,7 @@ body {
 }
 
 p {
-  margin-bottom: 1.3em;
+  margin: 1.3em 0;
 }
 
 h1,
@@ -59,12 +59,12 @@ small,
 }
 
 pre {
-  display: inline;
+  display: inline-block;
   background-color: $grey;
 }
 
 code {
-  @extend .font_small;
+  //@extend .font_small;
   font-family: "Inconsolata", ;
   color: white;
 }

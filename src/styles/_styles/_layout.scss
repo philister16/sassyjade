@@ -1,5 +1,14 @@
 /* Header */
 
+* {
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
 header {
   background: url("../img/day-at-the-beach.jpg");
   background-position: 50% 65%;
@@ -10,16 +19,24 @@ header {
 }
 
 .main {
+  min-height: 100%;
   margin: 0 10%;
+  margin-bottom: -50px;
+}
+
+.main:after {
+  content: "";
+  display: block;
+  height: 50px;
 }
 
 pre {
-  padding: 5px;
+  padding: 10px;
 }
 
 footer {
   background-color: $color4;
   height: 50px;
   padding: 15px;
-  border-top: 1px solid $color3;
+  border-top: 3px solid $color3;
 }

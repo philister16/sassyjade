@@ -11,8 +11,8 @@
   },
   "scripts": {
       "src": [
-        "src/scripts/**/*.js",
-        "node_modules/materialize-css/bin/materialize.js"
+        "node_modules/jquery/dist/jquery.js",
+        "src/scripts/**/*.js"
       ],
       "dest": "dist/js/"
   },

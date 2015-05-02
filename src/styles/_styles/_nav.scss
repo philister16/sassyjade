@@ -5,7 +5,7 @@ nav {
 
 nav ul {
   list-style-type: none;
-  padding: 0;
+  padding: 10px 0;
 }
 
 nav ul li {
@@ -28,4 +28,12 @@ nav ul li {
 
 nav ul li:last-child {
   border-right: none;
+}
+
+.fixed-nav {
+  @extend nav;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: white;
 }
