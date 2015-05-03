@@ -1,0 +1,67 @@
+extends layout/layout.jade
+block vars
+  - var page = "More"
+block main
+  .main
+    h2 Learn More
+    p Sassy Jade has productivity in mind. She proposes some workflows and folder structures to help you get started. But feel free to change and configure anything to your liking. You have full control over which folders are evaluated into which target folders via the configuration file.
+    h4 sassyjade.config.json
+    pre
+      code
+        "templ": {
+        |   "src": [
+        |     "src/templ/**/*.jade",
+        |     "!src/templ/index.jade",
+        |     "!src/templ/incl/*.jade",
+        |     "!src/templ/mixin/*.jade",
+        |     "!src/templ/layout/*.jade"
+        |     ],
+        |   "dest": "dist/views/"
+        |}
+    p This will set the paths where Gulp is looking for changes and files to evaluate. "**" is a wildcard for folder and "*" for files. "!" is a negation operator, so any path prepended by "!" in the src wouldn't be evaluated and listened to.
+    pre
+      code
+          "option": {
+          |   "messages": true,
+          |   "pretty": true,
+          |   "maps": true,
+          |   "jsName": "main.js",
+          |   "cssName": "main.css",
+          |   "livereloadOn": true
+          |}
+    p The config.json lets you configures basic behavior.
+    h4 Folder structure
+    pre
+      code
+        /*
+        |app-root
+        |  |-sassyjade.config.json
+        |  |-node_modules/
+        |  |-src/
+        |  |  |-assets/
+        |  |  |  |-files/
+        |  |  |  |-font/
+        |  |  |  |-img/
+        |  |  |-scripts/
+        |  |  |-styles/
+        |  |  |-templ/
+        |  |  |  |-incl/
+        |  |  |  |  |-config.jade
+        |  |  |  |-mixin/
+        |  |  |  |  |-jadestones.jade
+        |  |  |  |-layout/
+        |  |  |  |  |-base.jade
+        |  |  |-index.jade
+        |  |-gulpfile.js
+        |  |-package.json
+        |  |-dist/
+        |*/
+    p The default folder structure works perfectly in sync with the default config.json. Having said that, you can of course change it upside down if you like. Sassy Jade has an opinion about the workflow though, so we recommend you read on instead of messing with the structure.
+    h5 The "src" folder
+    p The most important folder in the project. This is where you are going to develop. It is split into 4 parts: assets such as images and files, scripts for your javascript, styles for your CSS preprocessor stylesheets and templ for your view templates. The assets folder by default is split into 3 sub-folders which contain files, fonts or images respectively. The scripts and styles folder are not opinionated as there will be many ways you might want to organize yourself, also depending on the libraries and frameworks you are going to use. The templ folder is highly opinionated on the other hand, so we dedicate it a separate paragraph.
+    h5 The "templ" folder
+    p The idea is, that you keep all your views at the root. These will be evaluated into the dist/views/ folder. The other 3 folders are not evaluated by default and should also serve the main views in the end. We highly recommend a config.jade where you define constants such as the root path. Base.jade on the other hands builds the document and helps to keep the layouts, includes and final views clean and maintainable.
+    h5 Index.jade?
+    p The only view that lives at the root of source is index.jade. It has its own Gulp task but you can do it differently if you like. No strong feelings here...
+    h3 Want to learn even more?
+    p Go and read the #[a(href="#") docs].
