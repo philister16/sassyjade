@@ -1,0 +1,18 @@
+extends layout/layout.jade
+block vars
+  - var page = "Cool"
+block main
+  .main
+    h2 Cool Stuff
+    p Some goodies and things Sassy Jade thinks are lovely.
+    h3 Stylee Jade ^_^
+    p You can switch from Sass to Stylus easily. If you installed all dependencies in the package.json properly just change the preprocessor option in the config.json to "stylus", like so:
+    pre
+      code
+        "preprocessor": "stylus"
+    p But be careful: this will mean that your .scss files are not evaluated anymore and as soon as you run
+    pre
+      code $ gulp style
+    p all your existing CSS in the dist/css folder will be overwritten. So change with caution and conciously.
+    h3 Jadestones
+    p In the src/templ/mixin folder you find a jadestones.jade document. In her free time Sassy Jade collects useful mixins for Jade and creates her own. The mixins aka jadestones have many different purposes.

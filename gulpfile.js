@@ -1,3 +1,8 @@
+// ### has TODO ###
+
+// TODO: refactor imagein, for example cache is preventing the image from being copied again, this is a problem if we want to exchange pictures or we delete the dist/ folder an re-create it for whatever reason
+
+
 /**
  * SASSY JADE
  *
@@ -205,9 +210,9 @@ gulp.task("font", function() {
 gulp.task("img", function() {
   return gulp.src(config.img.src)
   // compressing images if config.autocmpressImg is true
-  .pipe(cache(imagemin({
-    optimizationLevel: 3, progressive: true, interlaced: true, svgoPlugins: [{removeViewBox: false}]
-  })))
+  // .pipe(cache(imagemin({
+  //   optimizationLevel: 3, progressive: true, interlaced: true, svgoPlugins: [{removeViewBox: false}]
+  // })))
   .pipe(gulp.dest(config.img.dest))
   .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compressing and copying images."})));
 });
