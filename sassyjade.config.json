@@ -47,6 +47,6 @@
   "jsName": "main.js",
   "cssName": "main.css",
   "livereloadOn": true,
-  "preprocessor": "stylus"
+  "preprocessor": "sass"
   }
 }

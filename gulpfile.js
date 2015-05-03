@@ -96,6 +96,29 @@ var onError = function(err) {
   console.log(err);
 }
 
+// Clean the styles source to only include files of the activated preprocessor
+function getStylesSrc() {
+  console.log(config.styles.src);
+
+  var outputArr = [];
+  var output;
+  for(var i = 0; i < config.styles.src.length; i++) {
+    output = config.styles.src[i].substr(0,config.styles.src[i].length - 11);
+    if(config.option.preprocessor === "sass") {
+      output += "scss";
+    } else if (config.option.preprocessor === "stylus") {
+      output += "styl";
+    } else {
+      console.log("Error while executing gulp task 'style': No valid preprocessor defined. Check your sassyjade.config.json.");
+      break;
+    }
+    outputArr.push(output);
+  }
+  console.log(outputArr);
+  return outputArr;
+}
+
+
 /*==============================================================
   Jade
   ============================================================*/
@@ -135,35 +158,12 @@ gulp.task("jade", ["index"],function() {
   SASS / Stylus / CSS
   ============================================================*/
 
-// TODO: unwatch the files of the other preprocesssor
-gulp.task("unwatch-util", function() {
-
-// TODO: Check if array is correctly loaded, create multiple folders and files in the config.src
-console.log(config.styles.src);
-
-  var outputArr = [];
-  var output;
-  for(var i = 0; i < config.styles.src.length; i++) {
-    output = config.styles.src[i].substr(0,config.styles.src[i].length - 11);
-    if(config.option.preprocessor === "sass") {
-      output += "scss";
-    } else if (config.option.preprocessor === "stylus") {
-      output += "styl";
-    } else {
-      console.log("Error while executing gulp task 'style': No valid preprocessor defined. Check your sassyjade.config.json.");
-    }
-    outputArr.push(output);
-  }
-  console.log(outputArr);
-});
-
-
 // convert sass or stylus to css
 // create sourcemaps
 // plumber applied to keep sass or stylus running in case of typos
 // create sourcemaps if config.option.maps is true
 gulp.task("style", function() {
-  return gulp.src(config.styles.src)
+  return gulp.src(getStylesSrc())
     .pipe(plumber({
       errorHandler: onError
     }))
@@ -177,7 +177,7 @@ gulp.task("style", function() {
       .pipe(minify())
     .pipe(gulpif(config.option.maps, sourcemaps.write()))
     .pipe(gulp.dest(config.styles.dest))
-    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compiling Sass."})));
+    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compiling "+config.option.preprocessor+"."})));
 });
 
 
@@ -252,7 +252,7 @@ gulp.task("files", function() {
 
 // watching sass or stylus
 gulp.task("watch-style", function() {
-  gulp.watch(config.styles.src, ["style"]);
+  gulp.watch(getStylesSrc(), ["style"]);
 
   // if livereload is enabled create a server and watch the files in the dist/
   if(config.option.livereloadOn) {
@@ -323,7 +323,7 @@ gulp.task("watch", function() {
   gulp.watch(config.templ.src, ["jade"]);
 
   // Watch Sass or Sylus
-  gulp.watch(config.styles.src, ["style"]);
+  gulp.watch(getStylesSrc(), ["style"]);
 
   // Watch Scripts
   gulp.watch(config.scripts.src, ["script"]);
