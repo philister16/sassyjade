@@ -80,6 +80,7 @@ var gulp = require("gulp"),
     notify = require("gulp-notify"),
     jade = require("gulp-jade"),
     sass = require("gulp-sass"),
+    stylus = require("gulp-stylus"),
     prefix = require("gulp-autoprefixer"),
     minify = require("gulp-minify-css"),
     sourcemaps = require("gulp-sourcemaps"),
@@ -131,20 +132,44 @@ gulp.task("jade", ["index"],function() {
 
 
 /*==============================================================
-  SASS / CSS
+  SASS / Stylus / CSS
   ============================================================*/
 
-// convert sass to css
+// TODO: unwatch the files of the other preprocesssor
+gulp.task("unwatch-util", function() {
+
+// TODO: Check if array is correctly loaded, create multiple folders and files in the config.src
+console.log(config.styles.src);
+
+  var outputArr = [];
+  var output;
+  for(var i = 0; i < config.styles.src.length; i++) {
+    output = config.styles.src[i].substr(0,config.styles.src[i].length - 11);
+    if(config.option.preprocessor === "sass") {
+      output += "scss";
+    } else if (config.option.preprocessor === "stylus") {
+      output += "styl";
+    } else {
+      console.log("Error while executing gulp task 'style': No valid preprocessor defined. Check your sassyjade.config.json.");
+    }
+    outputArr.push(output);
+  }
+  console.log(outputArr);
+});
+
+
+// convert sass or stylus to css
 // create sourcemaps
-// plumber applied to keep sass running in case of typos
+// plumber applied to keep sass or stylus running in case of typos
 // create sourcemaps if config.option.maps is true
-gulp.task("sass", function() {
+gulp.task("style", function() {
   return gulp.src(config.styles.src)
     .pipe(plumber({
       errorHandler: onError
     }))
     .pipe(gulpif(config.option.maps, sourcemaps.init()))
-      .pipe(sass())
+      .pipe(gulpif(config.option.preprocessor === "sass", sass()))
+      .pipe(gulpif(config.option.preprocessor === "stylus", stylus()))
       .pipe(prefix('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
       .pipe(concat(config.option.cssName))
       .pipe(gulp.dest(config.styles.dest))
@@ -225,9 +250,9 @@ gulp.task("files", function() {
   Watchers
   ============================================================*/
 
-// watching sass
-gulp.task("watch-sass", function() {
-  gulp.watch(config.styles.src, ["sass"]);
+// watching sass or stylus
+gulp.task("watch-style", function() {
+  gulp.watch(config.styles.src, ["style"]);
 
   // if livereload is enabled create a server and watch the files in the dist/
   if(config.option.livereloadOn) {
@@ -297,8 +322,8 @@ gulp.task("watch", function() {
   // Watch Jade
   gulp.watch(config.templ.src, ["jade"]);
 
-  // Watch Sass
-  gulp.watch(config.styles.src, ["sass"]);
+  // Watch Sass or Sylus
+  gulp.watch(config.styles.src, ["style"]);
 
   // Watch Scripts
   gulp.watch(config.scripts.src, ["script"]);

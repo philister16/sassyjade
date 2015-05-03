@@ -17,7 +17,7 @@
   },
   "styles": {
       "src": [
-        "src/styles/**/*.scss"
+        "src/styles/**/*.{scss,styl}"
       ],
       "dest": "dist/css/"
   },
@@ -46,6 +46,7 @@
   "maps": true,
   "jsName": "main.js",
   "cssName": "main.css",
-  "livereloadOn": true
+  "livereloadOn": true,
+  "preprocessor": "stylus"
   }
 }
