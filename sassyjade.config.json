@@ -7,6 +7,9 @@
         "!src/templ/mixin/*.jade",
         "!src/templ/layout/*.jade"
       ],
+      "markdown": [
+        "src/templ/**/*.md"
+      ],
       "dest": "dist/views/"
   },
   "scripts": {

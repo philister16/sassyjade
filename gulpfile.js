@@ -43,33 +43,8 @@
 
 
 /*==============================================================
-  Config
+  Util
   ============================================================*/
-
-// 1. Folder structure
-//============================================================
-// Your app should have the following (opinionated) structure:
-
-/*
-app-root
-  |-node_modules/
-  |  |-[dependencies managed by npm]
-  |-src/
-  |  |-assets/
-  |  |  |-files
-  |  |  |-font
-  |  |  |-img
-  |  |-scripts/
-  |  |-styles/
-  |  |-templ
-  |  |  |-incl
-  |  |  |-mixin
-  |  |-index.jade    --> special entry file, has to be created at the root of src
-  |-gulpfile.js
-  |-package.json
-  |-dist/             --> don't touch! is created and managed automatically through Gulp
-*/
-
 
 // Require in the plugins
 var gulp = require("gulp"),
@@ -80,6 +55,7 @@ var gulp = require("gulp"),
     plumber = require("gulp-plumber"),
     notify = require("gulp-notify"),
     jade = require("gulp-jade"),
+    markdown = require("gulp-markdown"),
     sass = require("gulp-sass"),
     stylus = require("gulp-stylus"),
     prefix = require("gulp-autoprefixer"),
@@ -98,7 +74,6 @@ var onError = function(err) {
 
 // Clean the styles source to only include files of the activated preprocessor
 function getStylesSrc() {
-  console.log(config.styles.src);
 
   var outputArr = [];
   var output;
@@ -114,7 +89,7 @@ function getStylesSrc() {
     }
     outputArr.push(output);
   }
-  console.log(outputArr);
+
   return outputArr;
 }
 
@@ -129,7 +104,7 @@ function getImgMsg() {
 
 
 /*==============================================================
-  Jade
+  Jade / Markdown
   ============================================================*/
 
 // grabs the index file from the src and compiles it to the dist
@@ -162,6 +137,16 @@ gulp.task("jade", ["index"],function() {
     .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished compiling Jade."})));
 });
 
+// grab the markdown files and compile
+gulp.task("markdown", function() {
+  return gulp.src(config.templ.markdown)
+    .pipe(plumber({
+      errorHandler: onError
+    }))
+    .pipe(markdown())
+    .pipe(gulp.dest(config.templ.dest))
+    .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished rendering markdown."})));
+});
 
 /*==============================================================
   SASS / Stylus / CSS
@@ -295,6 +280,21 @@ gulp.task("watch-jade", function() {
   }
 });
 
+// watching markdown
+gulp.task("watch-markdown", function() {
+  gulp.watch(config.templ.markdown, ["markdown"]);
+
+  // if livereload is enabled create a server and watch the files in the dist/
+  if(config.option.livereloadOn) {
+
+    // Create LiveReload server
+    livereload.listen();
+
+    // Watch any files in dist/, reload on change
+    gulp.watch(['dist/**']).on('change', livereload.changed);
+  }
+});
+
 // watching scripts
 gulp.task("watch-script", function() {
   gulp.watch(config.scripts.src, ["script"]);
@@ -335,6 +335,9 @@ gulp.task("watch", function() {
 
   // Watch Jade
   gulp.watch(config.templ.src, ["jade"]);
+
+  // Watch Markdown
+  gulp.watch(config.templ.markdown, ["markdown"]);
 
   // Watch Sass or Sylus
   gulp.watch(getStylesSrc(), ["style"]);
