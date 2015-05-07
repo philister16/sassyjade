@@ -8,7 +8,7 @@
         "!src/templ/layout/*.jade"
       ],
       "markdown": [
-        "src/templ/**/*.md"
+        "readme.md"
       ],
       "dest": "dist/views/"
   },

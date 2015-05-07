@@ -14,6 +14,7 @@ If you have installed Sassyjade globally via command line you can use the simple
 ```
 $ saja create <yourProject>
 $ cd <yourProject>
+$ gulp watch
 ```
 This will create a new folder with the name of your project, install all dependencies via NPM and create the default folder and file structure.
 If you don't want the file and folder structure you can set the blank flag:
@@ -77,12 +78,72 @@ For example to change the path where to look for your Sass edit the `style.src` 
 ```
 ### Options
 In `sassyjade.config.json` you can also define some basic global options.
+```json
+"option": {
+"messages": true,
+"pretty": true,
+"maps": true,
+"jsName": "main.js",
+"cssName": "main.css",
+"livereloadOn": true,
+"preprocessor": "sass",
+"autocompress": true
+}
+```
 Option | Values | Default | Description
----------------------------------------
-`option.messages` | boolean | true | Shows Sassyjade system messages when tasks ran successfully.
-`option.pretty` | boolean | true | Makes the compiled html, css and JS human-readable
-`option.maps` | boolean | true | Writes sourcemaps of CSS and JS files.
-`option.jsName` | string | "main.js" | The name of the concatenated javascript.
-`option.cssName` | string | "main.css" | The name of the concatenated and compiled CSS file.
+:----- | :----- | :------ | :----------
+`messages` | boolean | `true` | Shows Sassyjade system messages when tasks ran successfully.
+`pretty` | boolean | `true` | Makes the compiled html, css and JS human-readable
+`maps` | boolean | `true` | Writes sourcemaps of CSS and JS files.
+`jsName` | string | `"main.js"` | The name of the concatenated javascript.
+`cssName` | string | `"main.css"` | The name of the concatenated and compiled CSS file.
+`livereloadOn` | boolean | `true` | Automatic refresh of the browser on save (needs external browser plugin to work!)
+`preprocessor` | string | `"sass"` | The preprocessor of choice as string. Besides Sass also Stylus is supported.
+`autocompress` | boolean | `true` | Compress images by default.
+### Gulp Tasks
+Sassyjade comes with multiple pre-defined gulp tasks.
 
-`option.messages` {bool} default: true
+For each task, default source and destination folders are predefined. They can be changed in `sassyjade.config.json` if needed.
+#### `$ gulp index`
+Looks up the index file in the source, compiles and copies it to the distribution version.
+#### `$ gulp jade`
+Sees jade files and compiles them into html. This task also runs the index task automatically.
+#### `$ gulp markdown`
+Sees markdown (.md) files and compiles them into html.
+#### `$ gulp style`
+Identifies stylesheets of the preprocessor selected and compiles these into 1 css file.
+#### `$ gulp script`
+Sees javascript files, concatenates and compiles them into one script file.
+#### `$ gulp font`
+Copies fonts from the source to the destination specified.
+#### `$ gulp img`
+Copies images from the source to the destination specified. Depending on `autocompress` in `sassyjade.config.json` images are also compressed.
+#### `$ gulp files`
+Copies changed files from the source into the destination selected.
+#### `$ gulp static-assets`
+Runs the 3 tasks `fonrt`, `img` and `files` together.
+### Gulp watchers
+Every defined stand-alone Gulp task comes with a built-in watcher that runs the task everytime a relevant file changes. To run a task and keep watching the files simply prepend the task with `watch-`.
+```
+$ gulp watch-<task>
+```
+For example: to watch for changes of the jade templates run: `$ gulp watch-jade`
+#### `$ gulp watch`
+A special, global watch task that keeps track of all changes and updates the relevant files.
+### Livereload
+Sassyjade is livereload enabled by default. In order for the browser to refresh automatically you need the respective livereload plugin. Refer to the [livereload documentation](http://livereload.com).
+## License
+MIT &copy; [philister16](phil@rinerock.com)
+
+
+
+
+
+
+
+
+
+
+
+
+

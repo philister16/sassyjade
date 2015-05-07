@@ -208,8 +208,8 @@ gulp.task("jshint", function() {
 
 // copy all static assets to the dist version
 // @sub-tasks: [fonts, img, files]
-gulp.task("assets", ["font", "img", "files"]);
-gulp.task("asset", ["font", "img", "files"]); // can be called as "assets" or "asset"
+gulp.task("static-assets", ["font", "img", "files"]);
+gulp.task("static-asset", ["font", "img", "files"]); // can be called as "assets" or "asset"
 
 // collects fonts from different sources and copies them to dist/fonts
 // the following extensions will be included: eot, svg, ttf, woff, woff2
