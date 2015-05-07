@@ -1,8 +1,3 @@
-// ### has TODO ###
-
-// TODO: refactor imagein, for example cache is preventing the image from being copied again, this is a problem if we want to exchange pictures or we delete the dist/ folder an re-create it for whatever reason
-
-
 /**
  * SASSY JADE
  *
@@ -81,6 +76,7 @@ var gulp = require("gulp"),
     config = require("./sassyjade.config.json"),
     gulpif = require("gulp-if"),
     rename = require("gulp-rename"),
+    changed = require("gulp-changed"),
     plumber = require("gulp-plumber"),
     notify = require("gulp-notify"),
     jade = require("gulp-jade"),
@@ -93,7 +89,6 @@ var gulp = require("gulp"),
     jshint = require("gulp-jshint"),
     uglify = require("gulp-uglify"),
     imagemin = require("gulp-imagemin"),
-    cache = require("gulp-cache"),
     livereload = require("gulp-livereload");
 
 // Plumber error stack
@@ -123,6 +118,14 @@ function getStylesSrc() {
   return outputArr;
 }
 
+function getImgMsg() {
+  if(config.option.autocompress) {
+    return "Sassyjade finished compressing and copying images.";
+  } else {
+    return "Sassyjade finished copying images.";
+  }
+}
+
 
 /*==============================================================
   Jade
@@ -139,7 +142,7 @@ gulp.task("index", function() {
       pretty: config.option.pretty
     }))
     .pipe(gulp.dest("dist/"))
-    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished updating your index file."})));
+    .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished updating your index file."})));
 });
 
 // grabs all templates in all folders after running the index task
@@ -155,7 +158,7 @@ gulp.task("jade", ["index"],function() {
       pretty: config.option.pretty
     }))
     .pipe(gulp.dest(config.templ.dest))
-    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compiling Jade."})));
+    .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished compiling Jade."})));
 });
 
 
@@ -182,7 +185,7 @@ gulp.task("style", function() {
       .pipe(minify())
     .pipe(gulpif(config.option.maps, sourcemaps.write()))
     .pipe(gulp.dest(config.styles.dest))
-    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compiling "+config.option.preprocessor+"."})));
+    .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished compiling "+config.option.preprocessor+"."})));
 });
 
 
@@ -203,7 +206,7 @@ gulp.task("script", ["jshint"], function() {
       .pipe(uglify())
     .pipe(gulpif(config.option.maps, sourcemaps.write()))
     .pipe(gulp.dest(config.scripts.dest))
-    .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compiling JS."})));
+    .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished compiling JS."})));
 });
 
 // Util task to hint through JS and check for any errors
@@ -226,28 +229,33 @@ gulp.task("asset", ["font", "img", "files"]); // can be called as "assets" or "a
 // the following extensions will be included: eot, svg, ttf, woff, woff2
 gulp.task("font", function() {
   return gulp.src(config.font.src)
+  .pipe(gulp.changed(config.font.dest))
   .pipe(gulp.dest(config.font.dest))
-  .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished copying fonts."})));
+  .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished copying fonts."})));
 });
 
 // collects images {png,jpg,gif} from different sources and copies them to dist/images
 // the following img types are included: png, jpg, gif
 gulp.task("img", function() {
   return gulp.src(config.img.src)
-  // compressing images if config.autocmpressImg is true
-  // .pipe(cache(imagemin({
-  //   optimizationLevel: 3, progressive: true, interlaced: true, svgoPlugins: [{removeViewBox: false}]
-  // })))
+    .pipe(changed(config.img.dest))
+    .pipe(gulpif(config.option.autocompress, imagemin({
+      optimizationLevel: 3,
+      progressive: true,
+      interlaced: true,
+      svgoPlugins: [{removeViewBox: false}]
+    })))
   .pipe(gulp.dest(config.img.dest))
-  .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished compressing and copying images."})));
+  .pipe(gulpif(config.option.messages, notify({onLast: true, message: getImgMsg()})));
 });
 
 // collects files from different sources and copies them to dist/files
 // Attention! All extensions are collected
 gulp.task("files", function() {
   return gulp.src(config.files.src)
+  .pipe(changed(config.files.dest))
   .pipe(gulp.dest(config.files.dest))
-  .pipe(gulpif(config.option.messages, notify({message: "Sassyjade finished copying files."})));
+  .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished copying files."})));
 });
 
 
