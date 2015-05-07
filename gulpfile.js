@@ -118,6 +118,7 @@ function getStylesSrc() {
   return outputArr;
 }
 
+// Prepare the notification depending on whether img-compression is on or off
 function getImgMsg() {
   if(config.option.autocompress) {
     return "Sassyjade finished compressing and copying images.";
