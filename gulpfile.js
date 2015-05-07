@@ -5,42 +5,9 @@
  *
  * @author phil@rhinerock.com
  * @url http://rhinerock.com
- * @version 0.0.3
+ * @version 0.0.4
  * @license MIT
  */
-
-/*==============================================================
-  CLI usage
-  ============================================================*/
-
-// Gulp Tasks
-
-// gulp index         creates the index.html
-//                    looks for index.jade at src/ and outputs index.html at dist/
-// gulp jade          builds the html views
-//                    looks for .jade files within src/templ and outputs .html at dist/views
-//                    the incl and dist folders are invisible
-// gulp sass          compiles sass to css
-//                    looks for .scss files in the src/sass/ folder and writes css into dist/css/
-// gulp minify        minifies existing css files
-//                    looks for all css files in the dist/css folder, concatenates and minifies them
-// gulp script        concatenates and uglifies all javascripts
-//                    looks for javascript in the src/scripts/ folder and writes to the dist/js folder
-// gulp asset         copies all assets to the dist version
-//                    it looks for assets based on the sources defined in the config object config
-//                    this command can also be called as gulp assets
-// gulp font          same functionality as gulp asset but targets only fonts
-// gulp img           same functionality as gulp asset but targets only images
-// gulp files         same functionality as gulp asset but targets only files
-
-// Gulp Watcher
-
-// gulp watch         realizes any changes in the src/ folder and executes "gulp jade", "gulp sass", "gulp script" and "gulp asset"
-// gulp watch-sass    realizes changes in the src/sass/ folder and executes "gulp sass"
-// gulp watch-jade    realizes changes in the src/templ/ folder and executes "gulp jade"
-// gulp watch-script  realizes changes in the src/scripts/ folder and executes "gulp script"
-// gulp watch-assets  realizes changes in the src/assets/ folder and executes "gulp asset"
-
 
 /*==============================================================
   Util
