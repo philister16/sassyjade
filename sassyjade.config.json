@@ -51,7 +51,6 @@
   "jsName": "main.js",
   "cssName": "main.css",
   "livereloadOn": true,
-  "preprocessor": "sass",
-  "autocompress": true
+  "preprocessor": "sass"
   }
 }

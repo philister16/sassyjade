@@ -23,6 +23,7 @@ $ saja create --blank <yourProject>
 ```
 If you decide not to install Sassyjade globally simply unpack the zip file in the desired folder and install the dependencies manually.
 ```
+$ cd <yourProject>
 $ npm install
 ```
 The install command has to be run from the root of your project. This is also where the `package.json` file should be located.
@@ -86,8 +87,7 @@ In `sassyjade.config.json` you can also define some basic global options.
 "jsName": "main.js",
 "cssName": "main.css",
 "livereloadOn": true,
-"preprocessor": "sass",
-"autocompress": true
+"preprocessor": "sass"
 }
 ```
 Option | Values | Default | Description
@@ -99,7 +99,6 @@ Option | Values | Default | Description
 `cssName` | string | `"main.css"` | The name of the concatenated and compiled CSS file.
 `livereloadOn` | boolean | `true` | Automatic refresh of the browser on save (needs external browser plugin to work!)
 `preprocessor` | string | `"sass"` | The preprocessor of choice as string. Besides Sass also Stylus is supported.
-`autocompress` | boolean | `true` | Compress images by default.
 ### Gulp Tasks
 Sassyjade comes with multiple pre-defined gulp tasks.
 
@@ -117,11 +116,11 @@ Sees javascript files, concatenates and compiles them into one script file.
 #### `$ gulp font`
 Copies fonts from the source to the destination specified.
 #### `$ gulp img`
-Copies images from the source to the destination specified. Depending on `autocompress` in `sassyjade.config.json` images are also compressed.
+Copies images from the source to the destination specified.
 #### `$ gulp files`
 Copies changed files from the source into the destination selected.
 #### `$ gulp static-assets`
-Runs the 3 tasks `fonrt`, `img` and `files` together.
+Runs the 3 tasks `font`, `img` and `files` together.
 ### Gulp watchers
 Every defined stand-alone Gulp task comes with a built-in watcher that runs the task everytime a relevant file changes. To run a task and keep watching the files simply prepend the task with `watch-`.
 ```
@@ -133,7 +132,7 @@ A special, global watch task that keeps track of all changes and updates the rel
 ### Livereload
 Sassyjade is livereload enabled by default. In order for the browser to refresh automatically you need the respective livereload plugin. Refer to the [livereload documentation](http://livereload.com).
 ## License
-MIT &copy; [philister16](phil@rinerock.com)
+MIT &copy; [philister16](mailto:phil@rinerock.com)
 
 
 

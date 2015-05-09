@@ -31,7 +31,6 @@ var gulp = require("gulp"),
     concat = require("gulp-concat"),
     jshint = require("gulp-jshint"),
     uglify = require("gulp-uglify"),
-    imagemin = require("gulp-imagemin"),
     livereload = require("gulp-livereload");
 
 // Plumber error stack
@@ -58,15 +57,6 @@ function getStylesSrc() {
   }
 
   return outputArr;
-}
-
-// Prepare the notification depending on whether img-compression is on or off
-function getImgMsg() {
-  if(config.option.autocompress) {
-    return "Sassyjade finished compressing and copying images.";
-  } else {
-    return "Sassyjade finished copying images.";
-  }
 }
 
 
@@ -192,14 +182,8 @@ gulp.task("font", function() {
 gulp.task("img", function() {
   return gulp.src(config.img.src)
     .pipe(changed(config.img.dest))
-    .pipe(gulpif(config.option.autocompress, imagemin({
-      optimizationLevel: 3,
-      progressive: true,
-      interlaced: true,
-      svgoPlugins: [{removeViewBox: false}]
-    })))
   .pipe(gulp.dest(config.img.dest))
-  .pipe(gulpif(config.option.messages, notify({onLast: true, message: getImgMsg()})));
+  .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished copying images."})));
 });
 
 // collects files from different sources and copies them to dist/files
