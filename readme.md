@@ -1,7 +1,7 @@
 # Sassyjade
 Op'ed front-end dev boilerplate with Sass and Jade on Gulp.
 ## Installation via command line
-You can a use Saja - Sassyjade's small and simple command line interface to start a new project. The CLI is installed via npm.
+You can use Saja - Sassyjade's small and simple command line interface to start a new project. The CLI is installed via npm.
 ```bash
 $ npm install -g saja
 ```
