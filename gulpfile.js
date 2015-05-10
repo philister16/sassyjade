@@ -172,7 +172,7 @@ gulp.task("static-asset", ["font", "img", "files"]); // can be called as "assets
 // the following extensions will be included: eot, svg, ttf, woff, woff2
 gulp.task("font", function() {
   return gulp.src(config.font.src)
-  .pipe(gulp.changed(config.font.dest))
+  .pipe(changed(config.font.dest))
   .pipe(gulp.dest(config.font.dest))
   .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished copying fonts."})));
 });

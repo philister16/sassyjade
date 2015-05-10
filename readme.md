@@ -1,32 +1,39 @@
 # Sassyjade
-Op'ed front-end dev with sass and jade on Gulp.
+Op'ed front-end dev boilerplate with Sass and Jade on Gulp.
 ## Installation via command line
-Use NPM to install Sassyjade globally. This will later on give you the capability to quickly start new projects via command line.
+You can a use Saja - Sassyjade's small and simple command line interface to start a new project. The CLI is installed via npm.
 ```bash
-$ npm install sassyjade -g
+$ npm install -g saja
 ```
-## Download
-Alternatively you can download the latest version as a ZIP file.
-
-[Sassyjade-0.0.4.zip](sassyjade.rhinerock.com/files/sassyjade-0.0.4.zip)
 ## Getting started
-If you have installed Sassyjade globally via command line you can use the simple command line interface that comes with it. To start a new project:
+Once you have installed Saja - the Sassyjade CLI globally you can start a new project with 1 simple command:
+```bash
+$ saja <yourProject>
 ```
-$ saja create <yourProject>
+This command will fetch the latest version of [Sassyjade](http://rhinerock.com/sassyjade) boilerplate and install all its dependencies in a new folder called "yourProject", relative to the folder from where you ran the command.
+
+Since the command also installs all necessary dependencies via npm you might run into some permission errors. In this case try to execute the command as super user: `$ sudo saja <yourProject>`.
+
+After that, to start working do:
+```
 $ cd <yourProject>
 $ gulp watch
 ```
-This will create a new folder with the name of your project, install all dependencies via NPM and create the default folder and file structure.
-If you don't want the file and folder structure you can set the blank flag:
+If you don't want the default folder and file structre of Sassyjade add the `--blank` flag. You can also just use `-b` instead.
 ```
-$ saja create --blank <yourProject>
+$ saja --blank <yourProject>
 ```
-If you decide not to install Sassyjade globally simply unpack the zip file in the desired folder and install the dependencies manually.
+### Manual Download
+
+If for some reason you don't want or cannot use Saja - the Sassyjade CLI you may alternatively just manually download the latest version of the Sassyjade boilerplate as a ZIP file.
+
+[Sassyjade-0.0.4.zip](http://rhinerock.com/sassyjade/files/sassyjade-0.0.4.zip)
+
+To get started unzip the file into your project folder. Then check that in the root of your project folder the file `package.json` exists. If it does go ahead and install Sassyjade's dependencies via npm and then start the gulp process.
 ```
-$ cd <yourProject>
-$ npm install
+$ sudo npm install
+$ gulp watch
 ```
-The install command has to be run from the root of your project. This is also where the `package.json` file should be located.
 ## Working with Sassyjade
 Sassyjade is opinionated. This means it has a default folder and file structure which dictate the workflow in a broad way.
 The folder and file structure can be changed via the `sassyjade.config.json` file.
@@ -53,7 +60,7 @@ The folder and file structure can be changed via the `sassyjade.config.json` fil
       |-package.json
       |-dist/
 #### node_modules/
-Contains all dependencies and is managed by NPM.
+Contains all dependencies and is managed by npm.
 #### src/
 The "source" folder - this is where the development files live.
 #### src/assets/
@@ -126,7 +133,7 @@ Every defined stand-alone Gulp task comes with a built-in watcher that runs the 
 ```
 $ gulp watch-<task>
 ```
-For example: to watch for changes of the jade templates run: `$ gulp watch-jade`
+For example: to watch for changes on the jade templates run: `$ gulp watch-jade`
 #### `$ gulp watch`
 A special, global watch task that keeps track of all changes and updates the relevant files.
 ### Livereload
