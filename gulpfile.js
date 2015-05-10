@@ -195,6 +195,15 @@ gulp.task("files", function() {
   .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished copying files."})));
 });
 
+// runs all tasks in order to (re-)build the dist/
+gulp.task("build", ["index", "jade", "markdown", "style", "script", "static-assets"], function() {
+  return notify({onLast: true, message: "Sassyjade finished building."});
+});
+
+// default task should do the same as build
+gulp.task("default", ["index", "jade", "markdown", "style", "script", "static-assets"], function() {
+  return notify({onLast: true, message: "Sassyjade finished building."});
+});
 
 /*==============================================================
   Watchers
