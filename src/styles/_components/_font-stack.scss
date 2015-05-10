@@ -15,40 +15,13 @@
 
 
 // H2-6 and body copy
-// @import url("http://fonts.googleapis.com/css?family=Arimo:400,700");
+@import url("http://fonts.googleapis.com/css?family=Arimo:400,700");
 
-@font-face {
-  font-family: "Arimo";
-  src: url('../font/Arimo/Arimo.eot'); /* IE9 Compat Modes */
-  src: url('../font/Arimo/Arimo.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../font/Arimo/Arimo.woff') format('woff'), /* Pretty Modern Browsers */
-       url('../font/Arimo/Arimo.ttf')  format('truetype'), /* Safari, Android, iOS */
-       url('../font/Arimo/Arimo.svg#svgFontName') format('svg'); /* Legacy iOS */
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "Arimo";
-  src: url('../font/Arimo-Bold/Arimo-Bold.eot'); /* IE9 Compat Modes */
-  src: url('../font/Arimo-Bold/Arimo-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../font/Arimo-Bold/Arimo-Bold.woff') format('woff'), /* Pretty Modern Browsers */
-       url('../font/Arimo-Bold/Arimo-Bold.ttf')  format('truetype'), /* Safari, Android, iOS */
-       url('../font/Arimo-Bold/Arimo-Bold.svg#svgFontName') format('svg'); /* Legacy iOS */
-  font-weight: 700;
-}
 // Usage: font-family: 'Arimo', sans-serif;
 
-// Code
-// @import url("http://fonts.googleapis.com/css?family=Inconsolata:400,700");
 
-@font-face {
-  font-family: "Inconsolata";
-  src: url('../font/Inconsolata/Inconsolata.eot'); /* IE9 Compat Modes */
-  src: url('../font/Inconsolata/Inconsolata.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../font/Inconsolata/Inconsolata.woff') format('woff'), /* Pretty Modern Browsers */
-       url('../font/Inconsolata/Inconsolata.ttf')  format('truetype'), /* Safari, Android, iOS */
-       url('../font/Inconsolata/Inconsolata.svg#svgFontName') format('svg'); /* Legacy iOS */
-  font-weight: 400;
-}
+// Code
+@import url("http://fonts.googleapis.com/css?family=Inconsolata:400,700");
+
 // Usage: font-family: 'Inconsolata', ;
 

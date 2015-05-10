@@ -10,7 +10,7 @@
       "markdown": [
         "readme.md"
       ],
-      "dest": "dist/views/"
+      "dest": "dist/"
   },
   "scripts": {
       "src": [
