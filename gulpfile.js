@@ -5,7 +5,7 @@
  *
  * @author phil@rhinerock.com
  * @url http://rhinerock.com
- * @version 0.0.4
+ * @version 0.0.5
  * @license MIT
  */
 
@@ -96,12 +96,12 @@ gulp.task("jade", ["index"],function() {
 
 // grab the markdown files and compile
 gulp.task("markdown", function() {
-  return gulp.src(config.templ.markdown)
+  return gulp.src(config.markdown.src)
     .pipe(plumber({
       errorHandler: onError
     }))
     .pipe(markdown())
-    .pipe(gulp.dest(config.templ.dest))
+    .pipe(gulp.dest(config.markdown.dest))
     .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished rendering markdown."})));
 });
 
@@ -242,7 +242,7 @@ gulp.task("watch-jade", function() {
 
 // watching markdown
 gulp.task("watch-markdown", function() {
-  gulp.watch(config.templ.markdown, ["markdown"]);
+  gulp.watch(config.markdown.src, ["markdown"]);
 
   // if livereload is enabled create a server and watch the files in the dist/
   if(config.option.livereloadOn) {
@@ -297,7 +297,7 @@ gulp.task("watch", function() {
   gulp.watch(config.templ.src, ["jade"]);
 
   // Watch Markdown
-  gulp.watch(config.templ.markdown, ["markdown"]);
+  gulp.watch(config.markdown.src, ["markdown"]);
 
   // Watch Sass or Sylus
   gulp.watch(getStylesSrc(), ["style"]);

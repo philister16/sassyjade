@@ -7,14 +7,17 @@
         "!src/templ/mixin/*.jade",
         "!src/templ/layout/*.jade"
       ],
-      "markdown": [
-        "readme.md"
+      "dest": "dist/views/"
+  },
+  "markdown": {
+      "src": [
+        "readme.md",
+        "src/assets/docs/**/*.md"
       ],
-      "dest": "dist/"
+      "dest": "dist/docs/"
   },
   "scripts": {
       "src": [
-        "node_modules/jquery/dist/jquery.js",
         "src/scripts/**/*.js"
       ],
       "dest": "dist/js/"
@@ -27,8 +30,7 @@
   },
   "font": {
     "src": [
-      "src/assets/font/**/*.{eot,svg,ttf,woff,woff2}",
-      "node_modules/materialize-css/font/**/*.{eot,svg,ttf,woff,woff2}"
+      "src/assets/font/**/*.{eot,svg,ttf,woff,woff2,otf}"
     ],
     "dest": "dist/font/"
   },
