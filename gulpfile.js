@@ -165,10 +165,14 @@ gulp.task("jshint", function() {
 
 // copy all static assets to the dist version
 // @sub-tasks: [fonts, img, files]
-gulp.task("static-assets", ["font", "img", "files"]);
+gulp.task("static-assets", ["font", "img", "files"], function(cb) {
+  cb(); // hack to indicate that task finished
+});
 
 // first deletes all asset folders and then recreates them
-gulp.task("clean-static-assets", ["kill-static-assets", "static-assets"]);
+gulp.task("clean-static-assets", ["kill-static-assets", "static-assets"], function(cb) {
+  cb(); // hack to indicate that task finished
+});
 
 // collects fonts from different sources and copies them to dist/fonts
 // the following extensions will be included: eot, svg, ttf, woff, woff2
@@ -211,7 +215,7 @@ gulp.task("default", ["index", "jade", "markdown", "style", "script", "static-as
   return notify({onLast: true, message: "Sassyjade finished building."});
 });
 
-gulp.task("rebuild", ["kill", "build"], function() {
+gulp.task("rebuild", ["kill", "index", "jade", "markdown", "style", "script", "static-assets"], function() {
   return notify({onLast: true, message: "Sassyjade finished rebuilding."});
 });
 
@@ -352,18 +356,14 @@ function getKillMsg(killed, recreate) {
   msg += ". Run <gulp ";
   msg += recreate;
   msg += "> to recreate it.";
-  return console.log(msg);
+  console.log(msg);
 }
 
 // Overall killer
 gulp.task("kill", function(cb) {
   del("dist/");
   getKillMsg("full distribution", "build");
-
-  function cb(err) {
-    err = null;
-    return err;
-  }
+  cb(); // hack to indicate that task finished
 });
 
 // Kills the index file
@@ -425,37 +425,5 @@ gulp.task("kill-static-assets", function(cb) {
       config.files.dest
     ]);
     getKillMsg("static assets", "static-assets");
-
-    function cb(err) {
-      err = null;
-      return err;
-    }
+    cb(); // hack to indicate that task finished
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
