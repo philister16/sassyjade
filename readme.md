@@ -117,6 +117,8 @@ Sassyjade comes with multiple pre-defined gulp tasks.
 For each task, default source and destination folders are predefined. They can be changed in `sassyjade.config.json` if needed.
 #### `$ gulp build`
 Make an all new build of the project. This command runs all other defined tasks once together. As this is the default Gulp task you can just use the shorthand `$ gulp` instead.
+#### `$ gulp rebuild`
+Same as build but cleans out the dist/ folder completely beforehand. This is useful to ensure that files which were deleted from the src/ but still exist at the dist/ from earlier builds are deleted.
 #### `$ gulp index`
 Looks up the index file in the source, compiles and copies it to the distribution version.
 ##### Config:
@@ -215,23 +217,16 @@ Every defined stand-alone Gulp task comes with a built-in watcher that runs the 
 ```
 $ gulp watch-<task>
 ```
-For example: to watch for changes on the jade templates run: `$ gulp watch-jade`
+For example: to watch for changes on the jade templates run: `$ gulp watch-jade`.
 #### `$ gulp watch`
 A special, global watch task that keeps track of all changes and updates the relevant files.
+### Gulp killers
+Every defined stand-alone Gulp taks comes with a built-in killer that deletes the task's output in the dist/ folder completely. To run the killer on any task simply prepend it with `kill-`. Killers are useful to clean the dist/ form any old files which might have been deleted at the src/ but still exist at the dist/.
+```
+$ gulp kill-<task>
+```
+For example: to kill (= delete) all static-assets run: `$ gulp kill-static-assets`.
 ### Livereload
 Sassyjade is livereload enabled by default. In order for the browser to refresh automatically you need the respective livereload plugin. Refer to the [livereload documentation](http://livereload.com).
 ## License
 MIT &copy; [philister16](mailto:phil@rinerock.com)
-
-
-
-
-
-
-
-
-
-
-
-
-
