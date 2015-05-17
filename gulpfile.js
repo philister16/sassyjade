@@ -15,6 +15,7 @@
 
 // Require in the plugins
 var gulp = require("gulp"),
+    del = require("del"),
     config = require("./sassyjade.config.json"),
     gulpif = require("gulp-if"),
     rename = require("gulp-rename"),
@@ -58,7 +59,6 @@ function getStylesSrc() {
 
   return outputArr;
 }
-
 
 /*==============================================================
   Jade / Markdown
@@ -325,3 +325,109 @@ gulp.task("watch", function() {
   }
 
 });
+
+/*==============================================================
+  Killers
+  ============================================================*/
+
+/**
+ * Util function to display the kill messages in the console
+ * @params str the item that got deleted
+ * @params str the task to run to recreate it
+ * @return str the message to be displayed
+ */
+function getKillMsg(killed, recreate) {
+  var msg = "Sassyjade killed the ";
+  msg += killed;
+  msg += ". Run <gulp ";
+  msg += recreate;
+  msg += "> to recreate it.";
+  return console.log(msg);
+}
+
+// Overall killer
+gulp.task("kill", function() {
+  del("dist/");
+  return getKillMsg("full distribution", "build");
+});
+
+// Kills the index file
+gulp.task("kill-index", function() {
+  del("dist/index.html");
+  return getKillMsg("index file", "index");
+});
+
+gulp.task("kill-jade", function() {
+  del([
+      config.templ.dest,
+      "dist/index.html"
+    ]);
+  return getKillMsg("views and index files", "jade");
+});
+
+gulp.task("kill-markdown", function() {
+  del(config.markdown.dest);
+  return getKillMsg("docs folder", "markdown");
+});
+
+gulp.task("kill-style", function() {
+  del(config.styles.dest);
+  return getKillMsg("css folder", "style");
+});
+
+gulp.task("kill-script", function() {
+  del(config.scripts.dest);
+  return getKillMsg("js folder", "script");
+});
+
+gulp.task("kill-img", function() {
+  del(config.img.dest);
+  return getKillMsg("img folder", "img");
+});
+
+gulp.task("kill-font", function() {
+  del(config.font.dest);
+  return getKillMsg("font folder", "font");
+});
+
+gulp.task("kill-files", function() {
+  del(config.files.dest);
+  return getKillMsg("files folder", "files");
+});
+
+gulp.task("kill-static-assets", function() {
+  del([
+      config.img.dest,
+      config.font.dest,
+      config.files.dest
+    ])
+  return getKillMsg("static assets", "static-assets");
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
