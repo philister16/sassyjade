@@ -166,7 +166,9 @@ gulp.task("jshint", function() {
 // copy all static assets to the dist version
 // @sub-tasks: [fonts, img, files]
 gulp.task("static-assets", ["font", "img", "files"]);
-gulp.task("static-asset", ["font", "img", "files"]); // can be called as "assets" or "asset"
+
+// first deletes all asset folders and then recreates them
+gulp.task("clean-static-assets", ["kill-static-assets", "static-assets"]);
 
 // collects fonts from different sources and copies them to dist/fonts
 // the following extensions will be included: eot, svg, ttf, woff, woff2
@@ -195,6 +197,10 @@ gulp.task("files", function() {
   .pipe(gulpif(config.option.messages, notify({onLast: true, message: "Sassyjade finished copying files."})));
 });
 
+/*==============================================================
+  Overall build tasks
+  ============================================================*/
+
 // runs all tasks in order to (re-)build the dist/
 gulp.task("build", ["index", "jade", "markdown", "style", "script", "static-assets"], function() {
   return notify({onLast: true, message: "Sassyjade finished building."});
@@ -203,6 +209,10 @@ gulp.task("build", ["index", "jade", "markdown", "style", "script", "static-asse
 // default task should do the same as build
 gulp.task("default", ["index", "jade", "markdown", "style", "script", "static-assets"], function() {
   return notify({onLast: true, message: "Sassyjade finished building."});
+});
+
+gulp.task("rebuild", ["kill", "build"], function() {
+  return notify({onLast: true, message: "Sassyjade finished rebuilding."});
 });
 
 /*==============================================================
@@ -346,9 +356,14 @@ function getKillMsg(killed, recreate) {
 }
 
 // Overall killer
-gulp.task("kill", function() {
+gulp.task("kill", function(cb) {
   del("dist/");
-  return getKillMsg("full distribution", "build");
+  getKillMsg("full distribution", "build");
+
+  function cb(err) {
+    err = null;
+    return err;
+  }
 });
 
 // Kills the index file
@@ -357,6 +372,7 @@ gulp.task("kill-index", function() {
   return getKillMsg("index file", "index");
 });
 
+// Kills all views and the index file
 gulp.task("kill-jade", function() {
   del([
       config.templ.dest,
@@ -365,43 +381,55 @@ gulp.task("kill-jade", function() {
   return getKillMsg("views and index files", "jade");
 });
 
+// Kills the docs
 gulp.task("kill-markdown", function() {
   del(config.markdown.dest);
   return getKillMsg("docs folder", "markdown");
 });
 
+// Kills the css
 gulp.task("kill-style", function() {
   del(config.styles.dest);
   return getKillMsg("css folder", "style");
 });
 
+// Kills the js
 gulp.task("kill-script", function() {
   del(config.scripts.dest);
   return getKillMsg("js folder", "script");
 });
 
+// Kills the images
 gulp.task("kill-img", function() {
   del(config.img.dest);
   return getKillMsg("img folder", "img");
 });
 
+// Kills the fonts
 gulp.task("kill-font", function() {
   del(config.font.dest);
   return getKillMsg("font folder", "font");
 });
 
+// Kills the files
 gulp.task("kill-files", function() {
   del(config.files.dest);
   return getKillMsg("files folder", "files");
 });
 
-gulp.task("kill-static-assets", function() {
+// Kills fonts, files and images
+gulp.task("kill-static-assets", function(cb) {
   del([
       config.img.dest,
       config.font.dest,
       config.files.dest
-    ])
-  return getKillMsg("static assets", "static-assets");
+    ]);
+    getKillMsg("static assets", "static-assets");
+
+    function cb(err) {
+      err = null;
+      return err;
+    }
 });
 
 
