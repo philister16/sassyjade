@@ -55,7 +55,7 @@ h4 {font-size: 1.414em;}
 
 small,
 .font_small {
-  font-size: 0.707em;
+  font-size: 0.92em;
 }
 
 pre {
@@ -64,8 +64,8 @@ pre {
 }
 
 code {
-  //@extend .font_small;
-  font-family: "Inconsolata", ;
+  @extend .font_small;
+  font-family: "Inconsolata", monospace;
   color: white;
 }
 

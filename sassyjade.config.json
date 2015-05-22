@@ -2,7 +2,6 @@
   "templ": {
       "src": [
         "src/templ/**/*.jade",
-        "!src/templ/index.jade",
         "!src/templ/incl/*.jade",
         "!src/templ/mixin/*.jade",
         "!src/templ/layout/*.jade"

@@ -63,6 +63,7 @@ However, the folder and file structure can be changed via the `sassyjade.config.
       |-gulpfile.js
       |-package.json
       |-dist/
+Do take note that if you decide to change the folder structure, you also need to update the `sassyjade.config.json` accordingly. Your project should always have a `src` and a `dist` folder at the minimum.
 #### node_modules/
 Contains all dependencies and is managed by npm.
 #### src/
@@ -79,6 +80,9 @@ Contains Jade templates which will be compiled into html views.
 The "production" folder - it is managed by Sassyjade. Generally there is no need to manipulate it manually.
 ### Configuration
 The `sassyjade.config.json` lets you define the paths in the source folders which are observed by Gulp.
+
+Every object in the `sassyjade.config.json` represents a the configuration settings for a Gulp task. The name of the object is identical with the Gulp task which can be called by this name. As such, the names should not be changed.
+
 For example to change the path where to look for your Sass edit the `style.src` property.
 ```json
 "styles": {
@@ -89,6 +93,10 @@ For example to change the path where to look for your Sass edit the `style.src` 
   }
 ```
 The default configuration for each Gulp task is documented together with the respective Gulp task itself.
+
+Please note that you should not change the first and second level of `sassyjade.config.json` as the gulp tasks depend on these. In above example only the values of `src` and `dest` should be changed. The first level, in above example `styles` refers to the respective gulp task.
+
+For the `src` you can generally define more than one folders to observe. `dest` on the other hand can always only have 1 folder.
 ### Options
 In `sassyjade.config.json` you can also define some basic global options.
 ```json
@@ -122,7 +130,7 @@ Same as build but cleans out the dist/ folder completely beforehand. This is use
 #### `$ gulp index`
 Looks up the index file in the source, compiles and copies it to the distribution version.
 ##### Config:
-Sassyjade always expects an `index.jade` file at the root of the `/src/` folder. This will be resolved to an `index.html` file at the root of the `/dist/` folder.
+Sassyjade expects an `index.jade` file at the `/src/templ/` folder. This will be resolved to an `index.html` file at the root of the `/dist/` folder.
 
 #### `$ gulp jade`
 Sees jade files and compiles them into html. This task also runs the index task automatically.
@@ -230,5 +238,7 @@ For example: to kill (= delete) all static-assets run: `$ gulp kill-static-asset
 Is a special, global kill task that deletes the entire dist/ folder completely. This might be useful before building for production to make sure all old files are wiped before uploading the build to the server.
 ### Livereload
 Sassyjade is livereload enabled by default. In order for the browser to refresh automatically you need the respective livereload plugin. Refer to the [livereload documentation](http://livereload.com).
+### Jade Templates
+Sassyjade has a predefined Jade templates structure. You are free to change it as you wish. If you decide to keep the template structure 
 ## License
 MIT &copy; [philister16](mailto:phil@rinerock.com)

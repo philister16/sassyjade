@@ -67,7 +67,7 @@ function getStylesSrc() {
 // grabs the index file from the src and compiles it to the dist
 // using jade
 gulp.task("index", function() {
-  return gulp.src("src/index.jade")
+  return gulp.src("src/templ/index.jade")
     .pipe(plumber({
       errorHandler: onError
     }))
