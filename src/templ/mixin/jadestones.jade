@@ -3,7 +3,6 @@
 
 //- Place a code snippet
   //- @hack code snippet {str} to be shared
-
 mixin code(hack)
   pre
     code= hack
@@ -15,7 +14,6 @@ mixin code(hack)
   //- @cl class {str} any classes to be assigned to the image
   //- @t text {str} text to go on the image, default is the dimension
   //- @c color {str} hex color value, default is grey
-
 mixin phImg(w, h, cl, t, col)
   - var string = "http://placehold.it/" + w + "x" + h + ".png"
   - if(col) { string += "/" + col.substring(1) }
@@ -26,6 +24,15 @@ mixin phImg(w, h, cl, t, col)
 //- Inserts a dead placeholder link
   //- @t text {str} the text of the link
   //- @cl class {str} any classes to be assigned to the link
-
 mixin phLn(t, cl)
   a(href="#", class=cl)= t
+
+//- To place a stylesheet via link tag
+  //- @ssh {str} the path to the stylesheet
+mixin ssh(ssh)
+  link(rel="stylesheet", type="text/css", href=ssh)
+
+//- Place a script via script tag
+  //- @scr {str} the path to the script
+mixin scr(scr)
+  script(type="text/javascript", src=scr)

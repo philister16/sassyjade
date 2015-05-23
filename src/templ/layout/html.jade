@@ -1,0 +1,19 @@
+doctype html
+block html
+  html
+    block depends
+      block vars
+      include ../incl/config.jade
+    block head
+      head
+        block meta
+          include ../incl/aux/meta.jade
+        block title
+          title= title
+        block stylesheet
+          include ../incl/aux/stylesheet.jade
+    block body
+      body
+        block layout
+        block script
+          include ../incl/aux/script.jade
