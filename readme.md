@@ -15,12 +15,12 @@ This command will fetch the latest version of [Sassyjade](http://rhinerock.com/s
 Since the command also installs all necessary dependencies via npm you might run into some permission errors. In this case try to execute the command as super user: `$ sudo saja <yourProject>`.
 
 After that, to start working do:
-```
+```bash
 $ cd <yourProject>
 $ gulp watch
 ```
 If you don't want the default folder and file structre of Sassyjade add the `--blank` flag. You can also just use `-b` instead.
-```
+```bash
 $ saja --blank <yourProject>
 ```
 ### Manual Download
@@ -30,7 +30,7 @@ If for some reason you don't want or cannot use Saja - the Sassyjade CLI you may
 [Sassyjade-0.0.5.zip](http://rhinerock.com/sassyjade/files/sassyjade-0.0.5.zip)
 
 To get started unzip the file into your project folder. Then check that in the root of your project folder the file `package.json` exists. If it does go ahead and install Sassyjade's dependencies via npm and then start the gulp process.
-```
+```bash
 $ sudo npm install
 $ gulp watch
 ```
@@ -135,7 +135,7 @@ Sassyjade expects an `index.jade` file at the `/src/templ/` folder. This will be
 #### `$ gulp jade`
 Sees jade files and compiles them into html. This task also runs the index task automatically.
 ##### Default config:
-```
+```json
 "templ": {
       "src": [
         "src/templ/**/*.jade",
@@ -151,7 +151,7 @@ Due to its special nature the `index.jade` file should generally be excluded. It
 #### `$ gulp markdown`
 Sees markdown (.md) files and compiles them into html.
 ##### Default config:
-```
+```json
 "markdown": {
       "src": [
         "readme.md",
@@ -164,7 +164,7 @@ Sassyjade assumes that the main readme file lives at the root of the project fol
 #### `$ gulp style`
 Identifies stylesheets of the preprocessor selected and compiles these into 1 css file.
 ##### Default config:
-```
+```json
 "styles": {
       "src": [
         "src/styles/**/*.{scss,styl}"
@@ -176,7 +176,7 @@ Please note that only the files of the preprocessor set in `sassyjade.config.jso
 #### `$ gulp script`
 Sees javascript files, concatenates and compiles them into one script file.
 ##### Default config:
-```
+```json
 "scripts": {
       "src": [
         "src/scripts/**/*.js"
@@ -188,7 +188,7 @@ Please note that the order of the sources matters! For example, if you intend to
 #### `$ gulp font`
 Copies fonts from the source to the destination specified.
 ##### Default config:
-```
+```json
 "font": {
     "src": [
       "src/assets/font/**/*.{eot,svg,ttf,woff,woff2,otf}"
@@ -199,7 +199,7 @@ Copies fonts from the source to the destination specified.
 #### `$ gulp img`
 Copies images from the source to the destination specified.
 ##### Default config:
-```
+```json
 "img": {
     "src": [
       "src/assets/img/**/*.{png,jpg,gif}"
@@ -210,7 +210,7 @@ Copies images from the source to the destination specified.
 #### `$ gulp files`
 Copies changed files from the source into the destination selected.
 ##### Default config:
-```
+```json
 "files": {
     "src": [
       "src/assets/files/**/*"
@@ -222,7 +222,7 @@ Copies changed files from the source into the destination selected.
 Runs the 3 tasks `font`, `img` and `files` together.
 ### Gulp watchers
 Every defined stand-alone Gulp task comes with a built-in watcher that runs the task everytime a relevant file changes. To run a task and keep watching the files simply prepend the task with `watch-`.
-```
+```bash
 $ gulp watch-<task>
 ```
 For example: to watch for changes on the jade templates run: `$ gulp watch-jade`.
@@ -230,7 +230,7 @@ For example: to watch for changes on the jade templates run: `$ gulp watch-jade`
 A special, global watch task that keeps track of all changes and updates the relevant files.
 ### Gulp killers
 Every defined stand-alone Gulp taks comes with a built-in killer that deletes the task's output in the dist/ folder completely. To run the killer on any task simply prepend it with `kill-`. Killers are useful to clean the dist/ from any old files which might have been deleted at the src/ but still exist at the dist/.
-```
+```bash
 $ gulp kill-<task>
 ```
 For example: to kill (= delete) all static-assets run: `$ gulp kill-static-assets`.
