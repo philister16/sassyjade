@@ -269,9 +269,15 @@ Sets the root of the dist/ of the project. If you develop locally you have to pa
 - var css = root + 'css/main.css';
 
 //- JS file to be included in distribution
-- var js = root + 'js/app.js';
+- var js = root + 'js/main.js';
 ```
-Sets the names of the compiled and concatenated css and javascript files in your distribution. Make sure that these paths are the same as your respective `"dest:"` options in the `sassyjade.config.json` file.
+Sets the names of the compiled and concatenated css and javascript files in your distribution. Make sure that these paths are the same as your respective options in the `sassyjade.config.json` file.
+```json
+  "option": {
+    "jsName": "main.js",
+    "cssName": "main.css"
+  }
+```
 ### Layouts
 The `templ/layout/` directory contains the layouts of the project. `html.jade` serves as the core structure and should be extended by all other layouts.
 #### html.jade
